@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedSkill — War Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --red:#ff2d2d;--red-deep:#e10600;--bg:#050607;--panel:#0b0d0f;--panel2:#111417;--line:#1d2126;--line2:#2b3138;
+    --ink:#eef1f4;--muted:#7e8791;--green:#2fd575;--amber:#ffb648;
+    --sans:'Space Grotesk',-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(.22,.68,.16,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+  @media(max-width:600px){.wrap{padding:0 18px}}
+  .reveal{opacity:1}
+  @media(prefers-reduced-motion:no-preference){
+    html.anim .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+    html.anim .reveal.in{opacity:1;transform:none}
+  }
+
+  header{position:sticky;top:0;z-index:80;background:rgba(5,6,7,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{height:22px;display:block}
+  .brand .env{font-family:var(--mono);font-size:10px;color:var(--green);border:1px solid rgba(47,213,117,.35);padding:3px 8px;border-radius:5px;letter-spacing:.08em}
+  .nav-links{display:flex;align-items:center;gap:22px}
+  .nav-links a:not(.btn){font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;transition:color .2s}
+  .nav-links a:not(.btn):hover{color:var(--ink)}
+  .btn{font-family:var(--mono);font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;padding:11px 18px;border-radius:8px;transition:.22s;white-space:nowrap;letter-spacing:.03em}
+  .btn-red{background:var(--red-deep);color:#fff}
+  .btn-red:hover{background:#fff;color:#000}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+  .btn-ghost:hover{border-color:var(--red);color:var(--red)}
+  @media(max-width:720px){.nav-links a:not(.btn){display:none}}
+
+  /* war room hero: console grid */
+  .hero{padding:56px 0 40px}
+  .console{display:grid;grid-template-columns:1.25fr .75fr;grid-template-rows:auto auto;gap:12px}
+  @media(max-width:880px){.console{grid-template-columns:1fr}}
+  .pane{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .pane-h{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);background:var(--panel2);font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .pane-h .led{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pl 2s infinite}
+  .pane-h .led.r{background:var(--red)}
+  @keyframes pl{50%{opacity:.3}}
+  .pane-h .right{margin-left:auto;color:var(--line2)}
+
+  /* main statement pane */
+  .main-pane{grid-row:span 2;padding:0}
+  .main-pane .body{padding:42px 40px 46px;display:flex;flex-direction:column;justify-content:center;flex:1}
+  @media(max-width:600px){.main-pane .body{padding:30px 22px 34px}}
+  .sit{font-family:var(--mono);font-size:11.5px;color:var(--red);letter-spacing:.14em;text-transform:uppercase}
+  h1.big{font-size:clamp(38px,5.8vw,74px);line-height:.94;font-weight:700;letter-spacing:-.035em;margin-top:18px}
+  h1.big em{font-style:normal;color:var(--red)}
+  .big-sub{font-size:clamp(15px,1.6vw,17.5px);line-height:1.6;color:var(--muted);margin-top:20px;max-width:46ch}
+  .hero-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .uptime{display:flex;gap:26px;margin-top:36px;flex-wrap:wrap;font-family:var(--mono)}
+  .uptime .u b{font-size:22px;font-weight:700;color:var(--ink)}
+  .uptime .u b em{font-style:normal;color:var(--red)}
+  .uptime .u span{display:block;font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+
+  /* live feed pane */
+  .feed{font-family:var(--mono);font-size:12px;line-height:1.5;padding:14px 16px;min-height:238px;display:flex;flex-direction:column;gap:8px;overflow:hidden;justify-content:flex-end}
+  .fe{display:flex;gap:10px;align-items:baseline;opacity:0;animation:fein .4s forwards}
+  @keyframes fein{to{opacity:1}}
+  html.noanim .fe{opacity:1;animation:none}
+  .fe .ts{color:var(--line2);white-space:nowrap}
+  .fe .tag{font-size:9.5px;padding:2px 7px;border-radius:4px;white-space:nowrap;letter-spacing:.06em}
+  .fe .tag.scan{background:rgba(255,45,45,.12);color:var(--red)}
+  .fe .tag.block{background:rgba(47,213,117,.12);color:var(--green)}
+  .fe .tag.warn{background:rgba(255,182,72,.12);color:var(--amber)}
+  .fe .msg{color:var(--muted)}
+
+  /* threat level pane */
+  .gauge-body{padding:22px 20px 26px;display:flex;align-items:center;gap:20px}
+  .gauge{position:relative;width:110px;height:110px;flex:none}
+  .gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .gauge .bgc{stroke:var(--line);fill:none;stroke-width:9}
+  .gauge .fgc{stroke:var(--red);fill:none;stroke-width:9;stroke-linecap:round;stroke-dasharray:289;stroke-dashoffset:289;transition:stroke-dashoffset 1.6s var(--ease)}
+  .gauge .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:21px;font-weight:700}
+  .gauge-info{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.75}
+  .gauge-info b{color:var(--ink);font-weight:500}
+  .gauge-info .crit{color:var(--red)}
+
+  /* marquee */
+  .marq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;overflow:hidden;background:var(--panel)}
+  .marq-track{display:flex;gap:44px;white-space:nowrap;width:max-content;animation:scroll 28s linear infinite;font-family:var(--mono);font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .marq:hover .marq-track{animation-play-state:paused}
+  .marq-track b{color:var(--red)}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* services: ops cards */
+  .services{padding:100px 0}
+  .kick{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;color:var(--red);text-transform:uppercase;letter-spacing:.12em}
+  .kick::before{content:"";width:28px;height:1px;background:var(--red)}
+  .h2{font-size:clamp(30px,4.6vw,56px);font-weight:700;letter-spacing:-.03em;line-height:1;margin-top:16px}
+  .h2 em{font-style:normal;color:var(--red)}
+  .ops{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:50px}
+  @media(max-width:860px){.ops{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.ops{grid-template-columns:1fr}}
+  .op{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .3s,transform .3s var(--ease)}
+  .op:hover{border-color:rgba(255,45,45,.4);transform:translateY(-4px)}
+  .op .oh{display:flex;align-items:center;gap:9px;padding:11px 16px;border-bottom:1px solid var(--line);background:var(--panel2);font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .op .oh i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .op:hover .oh i{background:var(--red)}
+  .op .ob{padding:22px 20px 26px}
+  .op h3{font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .op p{font-size:13.5px;line-height:1.6;color:var(--muted);margin-top:9px}
+  .op .st{margin-top:16px;font-family:var(--mono);font-size:10.5px;color:var(--green);letter-spacing:.06em}
+  .op:hover .st{color:var(--red)}
+
+  /* briefing / contact */
+  .contact{padding:0 0 110px}
+  .cbox{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+  .cbox .pane-h{border-radius:0}
+  .cgrid{display:grid;grid-template-columns:1fr 1fr}
+  @media(max-width:820px){.cgrid{grid-template-columns:1fr}}
+  .cinfo{padding:44px 42px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;gap:36px}
+  @media(max-width:820px){.cinfo{border-right:0;border-bottom:1px solid var(--line)}}
+  .cinfo h2{font-size:clamp(28px,3.6vw,44px);font-weight:700;letter-spacing:-.03em;line-height:.98}
+  .cinfo h2 em{font-style:normal;color:var(--red)}
+  .cinfo .det{display:flex;flex-direction:column;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .cinfo .det b{color:var(--ink);font-weight:500}
+  form{padding:40px 42px;display:flex;flex-direction:column;gap:15px}
+  @media(max-width:600px){form,.cinfo{padding:28px 20px}}
+  .field{display:flex;flex-direction:column;gap:7px}
+  label{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  label::before{content:"> ";color:var(--red)}
+  input,select,textarea{font-family:var(--mono);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px 14px;width:100%;transition:.2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(255,45,45,.12)}
+  select option{background:#0e1114;color:var(--ink)}
+  textarea{resize:vertical;min-height:80px}
+  form .btn-red{justify-content:center;padding:14px;border-radius:10px}
+
+  footer{border-top:1px solid var(--line);padding:36px 0}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .foot img{height:20px}
+  .foot p{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#050607">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#050607"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#ff2d2d" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#ff2d2d"/><line x1="600" y1="170" x2="600" y2="292" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/></g></svg>
+</template>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="assets/redskill-light.png" alt="RedSkill" /><span class="env">OPS · ONLINE</span></a>
+      <div class="nav-links">
+        <a href="#servicos">Operações</a>
+        <a href="#contato">Briefing</a>
+        <a class="btn btn-red" href="#contato">Solicitar orçamento</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="hero">
+  <div class="wrap">
+    <div class="console">
+      <div class="pane main-pane reveal">
+        <div class="pane-h"><span class="led r"></span> RedSkill · Sala de operações <span class="right">TTY-01</span></div>
+        <div class="body">
+          <span class="sit">Situação: sua empresa, agora</span>
+          <h1 class="big">O ataque já começou.<br/>A pergunta é quem<br/>chega <em>primeiro.</em></h1>
+          <p class="big-sub">Operamos como o invasor — reconhecimento, exploração e relatório — para que cada porta seja fechada antes de ser encontrada.</p>
+          <div class="hero-cta">
+            <a class="btn btn-red" href="#contato">Solicitar orçamento →</a>
+            <a class="btn btn-ghost" href="#servicos">Ver operações</a>
+          </div>
+          <div class="uptime">
+            <div class="u"><b>500<em>+</em></b><span>Testes conduzidos</span></div>
+            <div class="u"><b>98<em>%</em></b><span>Com falhas críticas</span></div>
+            <div class="u"><b>24<em>h</em></b><span>Resposta de escopo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane reveal">
+        <div class="pane-h"><span class="led"></span> Feed de eventos · ao vivo <span class="right">SIEM</span></div>
+        <div class="feed" id="feed"></div>
+      </div>
+
+      <div class="pane reveal">
+        <div class="pane-h"><span class="led r"></span> Exposição típica de um alvo <span class="right">SCAN</span></div>
+        <div class="gauge-body">
+          <div class="gauge">
+            <svg viewBox="0 0 100 100"><circle class="bgc" cx="50" cy="50" r="46"/><circle class="fgc" id="gg" cx="50" cy="50" r="46"/></svg>
+            <span class="pct"><span data-count="98">0</span>%</span>
+          </div>
+          <div class="gauge-info">
+            <div><b class="crit">98%</b> dos ambientes que testamos</div>
+            <div>tinham ao menos <b>1 falha crítica</b>.</div>
+            <div style="margin-top:8px">O seu seria diferente?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="marq"><div class="marq-track" id="marq"></div></div>
+
+<section class="services" id="servicos">
+  <div class="wrap">
+    <span class="kick reveal">Operações disponíveis</span>
+    <h2 class="h2 reveal">Seis operações.<br/>Um objetivo: chegar <em>antes.</em></h2>
+    <div class="ops" id="ops"></div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap">
+    <div class="cbox reveal">
+      <div class="pane-h"><span class="led"></span> Briefing inicial · canal seguro <span class="right">FORM-01</span></div>
+      <div class="cgrid">
+        <div class="cinfo">
+          <div>
+            <h2>Abra o seu<br/><em>briefing.</em></h2>
+            <p style="color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:16px;max-width:36ch">Conte o essencial do seu ambiente. Devolvemos escopo, prazo e investimento em até 24h úteis.</p>
+          </div>
+          <div class="det">
+            <div><b style="color:var(--green)">●</b> Disponível para novos projetos</div>
+            <div>E-MAIL → <b>contato@redskill.com.br</b></div>
+            <div>SIGILO → <b>NDA + LGPD desde o 1º contato</b></div>
+          </div>
+        </div>
+        <form onsubmit="event.preventDefault();this.reset();alert('Briefing recebido. Retornaremos em até 24h úteis.');">
+          <div class="field"><label>Nome / Empresa</label><input required placeholder="sua empresa" /></div>
+          <div class="field"><label>E-mail corporativo</label><input type="email" required placeholder="voce@empresa.com.br" /></div>
+          <div class="field"><label>Operação de interesse</label>
+            <select>
+              <option>Pentest / Teste de Intrusão</option>
+              <option>Red Team</option>
+              <option>Análise de Vulnerabilidades</option>
+              <option>Resposta a Incidentes</option>
+              <option>Treinamento / Conscientização</option>
+              <option>Consultoria / Compliance</option>
+            </select>
+          </div>
+          <div class="field"><label>Mensagem</label><textarea placeholder="descreva seu ambiente e objetivo..."></textarea></div>
+          <button class="btn btn-red" type="submit">Enviar briefing →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="assets/redskill-light.png" alt="RedSkill" />
+      <p>© 2026 RedSkill — Chegamos primeiro.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* live feed */
+(function(){
+  const EVENTS=[
+    ['scan','SCAN','tentativa de força bruta em ssh — bloqueada'],
+    ['block','DEFESA','porta 3306 exposta — fechada e documentada'],
+    ['warn','ALERTA','credencial vazada detectada em dump público'],
+    ['scan','SCAN','varredura de subdomínios do alvo iniciada'],
+    ['block','DEFESA','payload de phishing reportado pela equipe treinada'],
+    ['warn','ALERTA','CVE crítico identificado em servidor legado'],
+    ['block','DEFESA','vetor encadeado documentado com PoC'],
+    ['scan','SCAN','enumeração de APIs públicas concluída'],
+  ];
+  const feed=document.getElementById('feed');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce)document.documentElement.classList.add('noanim');
+  let i=0;
+  function ts(){const d=new Date();return d.toTimeString().slice(0,8)}
+  function add(){
+    const e=EVENTS[i%EVENTS.length];i++;
+    const div=document.createElement('div');div.className='fe';
+    div.innerHTML=`<span class="ts">${ts()}</span><span class="tag ${e[0]}">${e[1]}</span><span class="msg">${e[2]}</span>`;
+    feed.appendChild(div);
+    while(feed.children.length>7)feed.removeChild(feed.firstChild);
+  }
+  for(let k=0;k<5;k++)add();
+  if(!reduce)setInterval(add,2200);
+})();
+
+/* marquee */
+const items=['Pentest','Red Team','Análise de Vulnerabilidades','Resposta a Incidentes','Treinamento','LGPD &amp; ISO 27001','O ataque já começou — chegue primeiro'];
+const row=items.map(i=>`<span><b>✛</b> ${i}</span>`).join('');
+document.getElementById('marq').innerHTML=row+row;
+
+/* ops cards */
+const OPS=[
+  {c:'OP-01 · Ofensiva',t:'Pentest',d:'Testes de intrusão em aplicações, redes e infraestrutura, simulando ataques reais para revelar falhas antes da exploração.',s:'✓ pronto para engajar'},
+  {c:'OP-02 · Ofensiva',t:'Red Team',d:'Operações adversariais completas, multivetor e furtivas, medindo a real capacidade de detecção e resposta.',s:'✓ pronto para engajar'},
+  {c:'OP-03 · Contínua',t:'Análise de Vulnerabilidades',d:'Mapeamento contínuo da superfície de ataque, priorizando o que representa risco real ao negócio.',s:'✓ pronto para engajar'},
+  {c:'OP-04 · Emergência',t:'Resposta a Incidentes',d:'Contenção, erradicação e investigação forense, com plano de recuperação claro.',s:'✓ acionamento 24/7'},
+  {c:'OP-05 · Pessoas',t:'Treinamento',d:'Conscientização e capacitação técnica das equipes, de phishing simulado a hardening prático.',s:'✓ pronto para engajar'},
+  {c:'OP-06 · Regulatória',t:'Compliance & LGPD',d:'Consultoria em LGPD e ISO 27001 para alinhar a segurança técnica às exigências regulatórias.',s:'✓ pronto para engajar'},
+];
+document.getElementById('ops').innerHTML=OPS.map(o=>
+  `<div class="op reveal"><div class="oh"><i></i>${o.c}</div><div class="ob"><h3>${o.t}</h3><p>${o.d}</p><div class="st">${o.s}</div></div></div>`).join('');
+
+/* reveal + gauge + count */
+(function(){
+  const gg=document.getElementById('gg');
+  const gio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){gg.style.strokeDashoffset=289*(1-.98);gio.unobserve(gg)}}),{threshold:.5});
+  gio.observe(gg);
+  const els=[...document.querySelectorAll('[data-count]')];
+  const run=el=>{const end=+el.dataset.count,t0=performance.now();
+    const tick=t=>{const p=Math.min((t-t0)/1500,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick)};
+    requestAnimationFrame(tick)};
+  const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){run(e.target);cio.unobserve(e.target)}}),{threshold:.6});
+  els.forEach(el=>cio.observe(el));
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('anim');
+  const rs=[...document.querySelectorAll('.reveal')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+  rs.forEach(el=>io.observe(el));
+  const show=()=>rs.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*.96)el.classList.add('in')});
+  requestAnimationFrame(show);addEventListener('load',show);
+  setTimeout(()=>rs.forEach(el=>el.classList.add('in')),2200);
+})();
+</script>
+</body>
+</html>

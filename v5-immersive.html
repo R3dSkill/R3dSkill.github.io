@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedSkill — Immersive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --red:#e10600;
+    --red-hot:#ff3b30;
+    --dark:#160404;
+    --dark-2:#1f0605;
+    --line:rgba(255,255,255,.14);
+    --ink:#fff3f2;
+    --muted:rgba(255,243,242,.55);
+    --sans:'Space Grotesk',-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--red);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:#fff;color:var(--red)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+  @media(max-width:640px){.wrap{padding:0 22px}}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:70;transition:background .35s,backdrop-filter .35s}
+  header.sc{background:rgba(225,6,0,.82);backdrop-filter:blur(14px)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .brand img{height:25px;display:block}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;opacity:.85;transition:opacity .2s}
+  .nav-links a:hover{opacity:1}
+  .btn{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:0;padding:14px 24px;border-radius:999px;transition:.25s;white-space:nowrap}
+  .btn-w{background:#fff;color:var(--red)}
+  .btn-w:hover{background:var(--dark);color:#fff}
+  .btn-o{background:transparent;color:var(--ink);border:1.5px solid rgba(255,255,255,.45)}
+  .btn-o:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+  @media(max-width:760px){.nav-links a{display:none}}
+
+  /* hero — immersive red */
+  .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:120px 0 40px}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 110%,rgba(0,0,0,.4),transparent 60%)}
+  .noise{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .rings{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(120vmin,1100px);aspect-ratio:1;pointer-events:none}
+  .rings i{position:absolute;inset:0;border:1px solid rgba(255,255,255,.13);border-radius:50%;animation:ringPulse 5s ease-out infinite}
+  .rings i:nth-child(2){animation-delay:1.25s}
+  .rings i:nth-child(3){animation-delay:2.5s}
+  .rings i:nth-child(4){animation-delay:3.75s}
+  @keyframes ringPulse{from{transform:scale(.28);opacity:0}30%{opacity:.9}to{transform:scale(1.05);opacity:0}}
+  .hero-inner{position:relative;text-align:center}
+  .h-kick{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+  h1.colossal{font-size:clamp(56px,13vw,210px);line-height:.86;font-weight:700;letter-spacing:-.045em;text-transform:uppercase;margin-top:26px}
+  h1.colossal .w{color:#fff}
+  h1.colossal .d{color:var(--dark)}
+  .h-sub{max-width:520px;margin:30px auto 0;font-size:clamp(15px,1.8vw,19px);line-height:1.55;color:var(--ink);opacity:.85}
+  .h-cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+  .h-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;animation:bob 2.2s ease-in-out infinite}
+  @keyframes bob{50%{transform:translate(-50%,7px)}}
+  .reveal{opacity:1}
+  @media(prefers-reduced-motion:no-preference){
+    html.anim .reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(.22,.68,.16,1),transform .85s cubic-bezier(.22,.68,.16,1)}
+    html.anim .reveal.in{opacity:1;transform:none}
+  }
+  h1.colossal .w,h1.colossal .d{display:inline-block;transition:transform .5s cubic-bezier(.22,.68,.16,1)}
+  h1.colossal:hover .d{transform:translateX(-6px)}
+  h1.colossal:hover .w{transform:translateX(6px)}
+
+  /* dark body */
+  .body-dark{background:var(--dark);position:relative;border-radius:34px 34px 0 0;margin-top:-30px;z-index:2}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+  @media(max-width:640px){.stats{grid-template-columns:1fr}}
+  .st{padding:52px 40px;border-right:1px solid var(--line);text-align:center}
+  .st:last-child{border-right:0}
+  @media(max-width:640px){.st{border-right:0;border-bottom:1px solid var(--line)}.st:last-child{border-bottom:0}}
+  .st .v{font-family:var(--mono);font-size:clamp(38px,5vw,60px);font-weight:700;letter-spacing:-.03em}
+  .st .v em{font-style:normal;color:var(--red-hot)}
+  .st .l{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+  .services{padding:110px 0}
+  .sec-kick{font-family:var(--mono);font-size:12.5px;color:var(--red-hot);letter-spacing:.12em;text-transform:uppercase}
+  .sec-h{font-size:clamp(34px,5.4vw,72px);font-weight:700;letter-spacing:-.035em;line-height:.96;margin-top:18px}
+  .sec-h em{font-style:normal;color:var(--red-hot)}
+  .acc{margin-top:56px;border-top:1px solid var(--line)}
+  .acc-item{border-bottom:1px solid var(--line)}
+  .acc-btn{width:100%;display:grid;grid-template-columns:86px 1fr 40px;align-items:center;gap:22px;background:none;border:0;color:inherit;font-family:inherit;text-align:left;padding:28px 6px;cursor:pointer}
+  .acc-btn .num{font-family:var(--mono);font-size:14px;color:var(--muted)}
+  .acc-btn h3{font-size:clamp(22px,3vw,36px);font-weight:600;letter-spacing:-.02em;transition:color .25s}
+  .acc-item:hover h3,.acc-item.open h3{color:var(--red-hot)}
+  .acc-btn .pm{justify-self:end;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:17px;transition:transform .35s,background .25s,border-color .25s}
+  .acc-item.open .pm{transform:rotate(45deg);background:var(--red);border-color:var(--red);color:#fff}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.68,.16,1)}
+  .acc-body p{padding:0 6px 14px;margin-left:108px;max-width:56ch;font-size:15.5px;line-height:1.65;color:var(--muted)}
+  .acc-tags{display:flex;gap:8px;flex-wrap:wrap;padding:0 6px 30px;margin-left:108px}
+  .acc-tags span{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+  @media(max-width:680px){.acc-btn{grid-template-columns:50px 1fr 36px}.acc-body p,.acc-tags{margin-left:0}}
+
+  .contact{padding:0 0 120px}
+  .cbox{background:var(--red);border-radius:26px;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr;position:relative}
+  @media(max-width:840px){.cbox{grid-template-columns:1fr}}
+  .cbox::after{content:"";position:absolute;right:-90px;top:-90px;width:340px;height:340px;border:1.5px dashed rgba(255,255,255,.3);border-radius:50%;animation:spin 26s linear infinite;pointer-events:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .cinfo{padding:58px 52px;display:flex;flex-direction:column;justify-content:space-between;gap:44px}
+  .cinfo h2{font-size:clamp(34px,4.6vw,62px);font-weight:700;letter-spacing:-.035em;line-height:.94;text-transform:uppercase}
+  .cinfo h2 .d{color:var(--dark)}
+  .cinfo .det{display:flex;flex-direction:column;gap:13px;font-family:var(--mono);font-size:13px}
+  .cinfo .det span{opacity:.75}
+  form{background:var(--dark-2);padding:52px;display:flex;flex-direction:column;gap:17px;position:relative;z-index:1}
+  .field{display:flex;flex-direction:column;gap:8px}
+  label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  input,select,textarea{font-family:var(--mono);font-size:14px;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;padding:13px 15px;width:100%;transition:border-color .2s,background .2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red-hot);background:rgba(255,255,255,.08)}
+  select option{background:var(--dark);color:var(--ink)}
+  textarea{resize:vertical;min-height:86px}
+  form .btn-w{justify-content:center;padding:16px;border-radius:12px}
+
+  footer{background:var(--dark);border-top:1px solid var(--line);padding:42px 0}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .foot img{height:22px}
+  .foot p{font-family:var(--mono);font-size:12px;color:var(--muted)}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#e10600">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#e10600"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#ffffff" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#ffffff"/><line x1="600" y1="170" x2="600" y2="292" stroke="#ffffff" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#ffffff" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#ffffff" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#ffffff" stroke-width="34" stroke-linecap="round"/></g></svg>
+</template>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="assets/redskill-light.png" alt="RedSkill" /></a>
+      <div class="nav-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <a class="btn btn-w" href="#contato">Solicitar orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="hero">
+  <div class="noise"></div>
+  <div class="rings"><i></i><i></i><i></i><i></i></div>
+  <div class="wrap hero-inner">
+    <div class="h-kick">Segurança ofensiva // Brasil</div>
+    <h1 class="colossal"><span class="d">Atacar</span> <span class="w">para<br/>proteger.</span></h1>
+    <p class="h-sub">Simulamos o adversário real para que a sua empresa descubra as falhas com a gente — e não com o invasor.</p>
+    <div class="h-cta">
+      <a class="btn btn-w" href="#contato">Solicitar orçamento</a>
+      <a class="btn btn-o" href="#servicos">Ver capacidades</a>
+    </div>
+  </div>
+  <div class="h-scroll">Scroll ↓</div>
+</main>
+
+<div class="body-dark">
+  <div class="stats">
+    <div class="st reveal"><div class="v"><span data-count="500">0</span><em>+</em></div><div class="l">Testes conduzidos</div></div>
+    <div class="st reveal"><div class="v"><span data-count="98">0</span><em>%</em></div><div class="l">Com falhas críticas achadas</div></div>
+    <div class="st reveal"><div class="v"><span data-count="24">0</span><em>h</em></div><div class="l">Resposta de escopo</div></div>
+  </div>
+
+  <section class="services" id="servicos">
+    <div class="wrap">
+      <span class="sec-kick reveal">// Capacidades</span>
+      <h2 class="sec-h reveal">Pensamos como o invasor.<br/>Agimos <em>antes</em> dele.</h2>
+      <div class="acc" id="acc"></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="wrap">
+      <div class="cbox">
+        <div class="cinfo">
+          <h2>Vamos mapear o seu <span class="d">risco.</span></h2>
+          <div class="det">
+            <div><span>E-MAIL →</span> contato@redskill.com.br</div>
+            <div><span>ESCOPO →</span> devolvido em até 24h úteis</div>
+            <div><span>SIGILO →</span> NDA + LGPD desde o 1º contato</div>
+          </div>
+        </div>
+        <form onsubmit="event.preventDefault();this.reset();alert('Solicitação enviada. Retornaremos em até 24h úteis.');">
+          <div class="field"><label>Nome / Empresa</label><input required placeholder="sua empresa" /></div>
+          <div class="field"><label>E-mail corporativo</label><input type="email" required placeholder="voce@empresa.com.br" /></div>
+          <div class="field"><label>Serviço de interesse</label>
+            <select>
+              <option>Pentest / Teste de Intrusão</option>
+              <option>Red Team</option>
+              <option>Análise de Vulnerabilidades</option>
+              <option>Resposta a Incidentes</option>
+              <option>Treinamento / Conscientização</option>
+              <option>Consultoria / Compliance</option>
+            </select>
+          </div>
+          <div class="field"><label>Mensagem</label><textarea placeholder="descreva seu ambiente e objetivo..."></textarea></div>
+          <button class="btn btn-w" type="submit">Solicitar orçamento →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <img src="assets/redskill-light.png" alt="RedSkill" />
+        <p>© 2026 RedSkill — Atacar para proteger.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const SERVICES=[
+  {n:'01',t:'Pentest',g:['Web','API','Rede','Mobile'],d:'Testes de intrusão em aplicações, redes e infraestrutura, simulando ataques reais para revelar falhas antes que sejam exploradas.'},
+  {n:'02',t:'Red Team',g:['Furtivo','Multivetor','Eng. social'],d:'Operações adversariais completas, multivetor e furtivas, para medir a real capacidade de detecção e resposta da sua organização.'},
+  {n:'03',t:'Análise de Vulnerabilidades',g:['ASM','Triagem','Contínuo'],d:'Mapeamento contínuo da superfície de ataque, priorizando o que de fato representa risco ao negócio.'},
+  {n:'04',t:'Resposta a Incidentes',g:['Forense','Contenção','24/7'],d:'Contenção, erradicação e investigação forense quando o incidente acontece — com plano de recuperação claro.'},
+  {n:'05',t:'Treinamento',g:['Phishing','Hardening','Workshops'],d:'Conscientização e capacitação técnica das equipes, de phishing simulado a hardening prático.'},
+  {n:'06',t:'Compliance & LGPD',g:['LGPD','ISO 27001'],d:'Consultoria em LGPD e ISO 27001 para alinhar a segurança técnica às exigências regulatórias.'},
+];
+const acc=document.getElementById('acc');
+acc.innerHTML=SERVICES.map((s,i)=>
+  `<div class="acc-item${i===0?' open':''}"><button class="acc-btn" type="button"><span class="num">/${s.n}</span><h3>${s.t}</h3><span class="pm">+</span></button><div class="acc-body"><p>${s.d}</p><div class="acc-tags">${s.g.map(t=>`<span>${t}</span>`).join('')}</div></div></div>`).join('');
+const items=[...acc.querySelectorAll('.acc-item')];
+function setH(it,open){const b=it.querySelector('.acc-body');b.style.maxHeight=open?b.scrollHeight+'px':'0px'}
+items.forEach(it=>{
+  setH(it,it.classList.contains('open'));
+  it.querySelector('.acc-btn').addEventListener('click',()=>{
+    const was=it.classList.contains('open');
+    items.forEach(o=>{o.classList.remove('open');setH(o,false)});
+    if(!was){it.classList.add('open');setH(it,true)}
+  });
+});
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('sc',scrollY>30),{passive:true});
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('anim');
+  const rs=[...document.querySelectorAll('.reveal')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+  rs.forEach(el=>io.observe(el));
+  const show=()=>rs.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*.96)el.classList.add('in')});
+  requestAnimationFrame(show);addEventListener('load',show);
+  setTimeout(()=>rs.forEach(el=>el.classList.add('in')),2200);
+})();
+(function(){
+  const els=[...document.querySelectorAll('[data-count]')];
+  const run=el=>{const end=+el.dataset.count,t0=performance.now();
+    const tick=t=>{const p=Math.min((t-t0)/1400,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick)};
+    requestAnimationFrame(tick)};
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){run(e.target);io.unobserve(e.target)}}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

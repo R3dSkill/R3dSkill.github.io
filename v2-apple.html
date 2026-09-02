@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedSkill — Clean</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --red:#e10600;
+    --red-soft:#ff3b30;
+    --bg:#ffffff;
+    --bg-2:#f5f5f7;
+    --ink:#1d1d1f;
+    --muted:#6e6e73;
+    --line:#e3e3e6;
+    --sans:'Space Grotesk',-apple-system,sans-serif;
+    --body:'Manrope',-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+  .reveal{opacity:1;transform:none}
+  @media(prefers-reduced-motion:no-preference){
+    .anim .reveal{animation:floatIn .8s cubic-bezier(.2,.7,.2,1) both}
+  }
+  @keyframes floatIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand img{height:24px;display:block}
+  .nav-links{display:flex;gap:36px}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{font-family:var(--sans);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;padding:11px 20px;border-radius:980px;transition:.22s;white-space:nowrap}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-red:hover{background:#000}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-dark:hover{background:var(--red)}
+  .btn-ghost{background:var(--bg-2);color:var(--ink)}
+  .btn-ghost:hover{background:#e7e7ea}
+  @media(max-width:720px){.nav-links{display:none}}
+
+  /* hero */
+  .hero{text-align:center;padding:90px 0 0}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--red);text-transform:uppercase;display:inline-flex;align-items:center;gap:9px}
+  h1.display{font-family:var(--sans);font-size:clamp(48px,9vw,112px);line-height:.96;font-weight:700;letter-spacing:-.04em;margin:22px auto 0;max-width:14ch}
+  h1.display .grad{color:var(--red)}
+  .hero p.lead{font-size:clamp(18px,2.2vw,23px);line-height:1.5;color:var(--muted);max-width:640px;margin:26px auto 0;font-weight:500}
+  .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+  .hero-link{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--red);display:inline-flex;align-items:center;gap:6px}
+  .hero-link:hover{text-decoration:underline}
+
+  /* macbook */
+  .stage{margin-top:64px;padding-bottom:90px;perspective:1600px}
+  .macbook{max-width:880px;margin:0 auto;transform:rotateX(4deg);transform-style:preserve-3d}
+  .screen{background:#0b0b0d;border:10px solid #1c1c1e;border-radius:22px 22px 4px 4px;box-shadow:0 60px 120px -50px rgba(0,0,0,.55),0 0 0 1.5px #d8d8db;overflow:hidden;aspect-ratio:16/10.2}
+  .menu{display:flex;align-items:center;gap:7px;padding:11px 15px;background:#161618;border-bottom:1px solid #232325}
+  .menu .d{width:10px;height:10px;border-radius:50%}
+  .menu .t{margin-left:10px;font-family:var(--mono);font-size:11px;color:#7d7d85}
+  .dash{display:grid;grid-template-columns:170px 1fr;height:calc(100% - 35px);color:#e9e9ec}
+  .side{background:#0e0e10;border-right:1px solid #232325;padding:16px 14px;display:flex;flex-direction:column;gap:7px}
+  .side .si{font-family:var(--mono);font-size:11px;color:#85858d;padding:7px 9px;border-radius:6px}
+  .side .si.act{background:rgba(225,6,0,.14);color:#ff5b54}
+  .panel{padding:18px 20px;display:flex;flex-direction:column;gap:14px;background:#0b0b0d}
+  .ph{display:flex;justify-content:space-between;align-items:center}
+  .ph h4{font-family:var(--sans);font-size:14px;font-weight:600}
+  .ph span{font-family:var(--mono);font-size:10.5px;color:#39d98a}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .mc{background:#121214;border:1px solid #242427;border-radius:10px;padding:12px}
+  .mc .lab{font-family:var(--mono);font-size:9.5px;color:#85858d;text-transform:uppercase;letter-spacing:.05em}
+  .mc .big{font-family:var(--sans);font-size:25px;font-weight:700;margin-top:6px}
+  .mc.crit .big{color:#ff453a}
+  .mc.warn .big{color:#ffcc4d}
+  .mc.ok .big{color:#39d98a}
+  .bars{display:flex;flex-direction:column;gap:9px;margin-top:2px}
+  .bar{display:flex;align-items:center;gap:10px}
+  .bar .bl{font-family:var(--mono);font-size:10px;color:#a0a0a8;width:118px}
+  .bar .track{flex:1;height:7px;background:#1c1c1f;border-radius:4px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--red),#ff5b54)}
+  @media(max-width:560px){.dash{grid-template-columns:1fr}.side{display:none}}
+
+  /* logos strip */
+  .trust{padding:18px 0 70px;text-align:center}
+  .trust p{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.05em}
+
+  /* services */
+  .services{background:var(--bg-2);padding:96px 0}
+  .sec-top{text-align:center;margin-bottom:60px}
+  .sec-top .eyebrow{justify-content:center}
+  .sec-top h2{font-family:var(--sans);font-size:clamp(32px,5vw,58px);font-weight:700;letter-spacing:-.03em;margin-top:16px;line-height:1.02}
+  .sec-top p{color:var(--muted);font-size:18px;margin-top:16px;max-width:520px;margin-inline:auto;font-weight:500}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:860px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:540px){.svc-grid{grid-template-columns:1fr}}
+  .svc{background:var(--bg);border-radius:20px;padding:32px 28px 34px;border:1px solid var(--line);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+  .svc:hover{transform:translateY(-6px);box-shadow:0 24px 50px -28px rgba(0,0,0,.25)}
+  .svc .ic{width:46px;height:46px;border-radius:12px;background:var(--bg-2);display:grid;place-items:center;margin-bottom:20px}
+  .svc h3{font-family:var(--sans);font-size:21px;font-weight:600;letter-spacing:-.01em}
+  .svc p{color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:11px;font-weight:500}
+  .svc .num{font-family:var(--mono);font-size:11px;color:var(--red);float:right}
+
+  /* contact */
+  .contact{padding:100px 0}
+  .contact-inner{max-width:720px;margin:0 auto;text-align:center}
+  .contact-inner h2{font-family:var(--sans);font-size:clamp(34px,5vw,62px);font-weight:700;letter-spacing:-.03em;line-height:1}
+  .contact-inner h2 .grad{color:var(--red)}
+  .contact-inner p{color:var(--muted);font-size:18px;margin-top:18px;font-weight:500}
+  form{margin-top:42px;display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field.full{grid-column:1/-1}
+  label{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  input,select,textarea{font-family:var(--body);font-size:15px;font-weight:500;color:var(--ink);background:var(--bg-2);border:1px solid transparent;border-radius:12px;padding:14px 16px;width:100%;transition:.2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);background:#fff}
+  textarea{resize:vertical;min-height:96px}
+  form .btn-red{grid-column:1/-1;justify-content:center;padding:15px;font-size:15px;border-radius:14px}
+  @media(max-width:560px){form{grid-template-columns:1fr}}
+
+  footer{border-top:1px solid var(--line);padding:38px 0}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .foot img{height:20px}
+  .foot p{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .xh line,.xh circle{stroke:var(--red)}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#ffffff">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#ffffff"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#e10600" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#e10600"/><line x1="600" y1="170" x2="600" y2="292" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#e10600" stroke-width="34" stroke-linecap="round"/></g></svg>
+</template>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="assets/redskill-dark.png" alt="RedSkill" /></a>
+      <div class="nav-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <a class="btn btn-dark" href="#contato">Solicitar orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="hero">
+  <div class="wrap">
+    <span class="eyebrow reveal">
+      <svg class="xh" width="14" height="14" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="none" stroke-width="7"/><circle cx="50" cy="50" r="6" fill="var(--red)" stroke="none"/><line x1="50" y1="2" x2="50" y2="26" stroke-width="7"/><line x1="50" y1="74" x2="50" y2="98" stroke-width="7"/><line x1="2" y1="50" x2="26" y2="50" stroke-width="7"/><line x1="74" y1="50" x2="98" y2="50" stroke-width="7"/></svg>
+      Segurança ofensiva
+    </span>
+    <h1 class="display reveal">Atacar para <span class="grad">proteger.</span></h1>
+    <p class="lead reveal">Encontramos as falhas antes dos invasores. Pentest, Red Team e defesa contínua, com a clareza e o rigor que a sua empresa precisa.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-red" href="#contato">Solicitar orçamento</a>
+      <a class="hero-link" href="#servicos">Conhecer serviços →</a>
+    </div>
+  </div>
+
+  <div class="stage reveal">
+    <div class="macbook">
+      <div class="screen">
+        <div class="menu">
+          <span class="d" style="background:#ff5f57"></span>
+          <span class="d" style="background:#febc2e"></span>
+          <span class="d" style="background:#28c840"></span>
+          <span class="t">redskill — painel de exposição</span>
+        </div>
+        <div class="dash">
+          <div class="side">
+            <div class="si act">◎ Visão geral</div>
+            <div class="si">⚠ Vulnerabilidades</div>
+            <div class="si">⌘ Ativos</div>
+            <div class="si">↻ Red Team</div>
+            <div class="si">✎ Relatórios</div>
+          </div>
+          <div class="panel">
+            <div class="ph"><h4>Superfície de ataque</h4><span>● monitorando</span></div>
+            <div class="cards">
+              <div class="mc crit"><div class="lab">Críticas</div><div class="big">03</div></div>
+              <div class="mc warn"><div class="lab">Médias</div><div class="big">11</div></div>
+              <div class="mc ok"><div class="lab">Corrigidas</div><div class="big">96%</div></div>
+            </div>
+            <div class="bars">
+              <div class="bar"><span class="bl">Exposição externa</span><span class="track"><span class="fill" style="width:82%"></span></span></div>
+              <div class="bar"><span class="bl">Endpoints</span><span class="track"><span class="fill" style="width:64%"></span></span></div>
+              <div class="bar"><span class="bl">Identidade & acesso</span><span class="track"><span class="fill" style="width:48%"></span></span></div>
+              <div class="bar"><span class="bl">Aplicações web</span><span class="track"><span class="fill" style="width:73%"></span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="trust">
+  <div class="wrap"><p class="reveal">CONFIANÇA DE EMPRESAS · STARTUPS · INSTITUIÇÕES FINANCEIRAS</p></div>
+</div>
+
+<section class="services" id="servicos">
+  <div class="wrap">
+    <div class="sec-top">
+      <span class="eyebrow reveal">// Serviços</span>
+      <h2 class="reveal">Defesa que pensa<br/>como o atacante.</h2>
+      <p class="reveal">Seis frentes para mapear, explorar e blindar toda a sua superfície de ataque.</p>
+    </div>
+    <div class="svc-grid" id="svc-grid"></div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap">
+    <div class="contact-inner">
+      <h2 class="reveal">Vamos mapear o<br/>seu <span class="grad">risco.</span></h2>
+      <p class="reveal">Conte sobre o seu ambiente e devolvemos um escopo de avaliação em até 24h úteis.</p>
+      <form class="reveal" onsubmit="event.preventDefault();this.reset();alert('Solicitação enviada. Retornaremos em breve.');">
+        <div class="field"><label>Nome / Empresa</label><input required placeholder="Sua empresa" /></div>
+        <div class="field"><label>E-mail corporativo</label><input type="email" required placeholder="voce@empresa.com.br" /></div>
+        <div class="field full"><label>Serviço de interesse</label>
+          <select>
+            <option>Pentest / Teste de Intrusão</option>
+            <option>Red Team</option>
+            <option>Análise de Vulnerabilidades</option>
+            <option>Resposta a Incidentes</option>
+            <option>Treinamento / Conscientização</option>
+            <option>Consultoria / Compliance</option>
+          </select>
+        </div>
+        <div class="field full"><label>Mensagem</label><textarea placeholder="Descreva seu ambiente e objetivo..."></textarea></div>
+        <button class="btn btn-red" type="submit">Solicitar orçamento</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="assets/redskill-dark.png" alt="RedSkill" />
+      <p>© 2026 RedSkill — Atacar para proteger.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const SERVICES=[
+    {n:'01',i:'◎',t:'Pentest',d:'Testes de intrusão em aplicações, redes e infraestrutura, simulando ataques reais para revelar falhas antes que sejam exploradas.'},
+    {n:'02',i:'↻',t:'Red Team',d:'Operações adversariais completas e furtivas para medir a real capacidade de detecção e resposta da organização.'},
+    {n:'03',i:'⚠',t:'Análise de Vulnerabilidades',d:'Mapeamento contínuo da superfície de ataque, priorizando o que de fato representa risco ao negócio.'},
+    {n:'04',i:'✦',t:'Resposta a Incidentes',d:'Contenção, erradicação e investigação forense quando o incidente acontece, com plano de recuperação claro.'},
+    {n:'05',i:'✎',t:'Treinamento',d:'Conscientização e capacitação técnica das equipes, de phishing simulado a hardening prático.'},
+    {n:'06',i:'⌘',t:'Compliance & LGPD',d:'Consultoria em LGPD e ISO 27001 para alinhar a segurança técnica às exigências regulatórias.'},
+  ];
+  document.getElementById('svc-grid').innerHTML=SERVICES.map(s=>
+    `<div class="svc reveal"><span class="num">${s.n}</span><div class="ic" style="font-size:22px;color:var(--red)">${s.i}</div><h3>${s.t}</h3><p>${s.d}</p></div>`).join('');
+
+  const reveals=document.querySelectorAll('.reveal');
+  // Visible by default; the floatIn intro is pure enhancement that can never leave content hidden.
+  reveals.forEach((el,i)=>{el.style.animationDelay=(Math.min(i,6)*60)+'ms'});
+  requestAnimationFrame(()=>document.documentElement.classList.add('anim'));
+</script>
+</body>
+</html>

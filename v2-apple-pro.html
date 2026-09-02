@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedSkill — Clean PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --red:#e10600;--red-soft:#ff3b30;--bg:#ffffff;--bg-2:#f5f5f7;--ink:#1d1d1f;--muted:#6e6e73;--line:#e3e3e6;
+    --green:#30d158;--amber:#ffd60a;
+    --sans:'Space Grotesk',-apple-system,sans-serif;--body:'Manrope',-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(.22,.68,.16,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit;text-decoration:none}
+  a:hover{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+  .reveal{opacity:1}
+  @media(prefers-reduced-motion:no-preference){
+    html.anim .reveal{opacity:0;transform:translateY(24px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+    html.anim .reveal.in{opacity:1;transform:none}
+  }
+
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand img{height:24px;display:block}
+  .nav-links{display:flex;gap:36px}
+  .nav-links a{font-size:14px;font-weight:600;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{font-family:var(--sans);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;padding:11px 20px;border-radius:980px;transition:transform .25s var(--ease),background .22s,color .22s,box-shadow .25s;white-space:nowrap}
+  .btn:active{transform:scale(.97)}
+  .btn-red{background:var(--red);color:#fff;box-shadow:0 6px 20px -8px rgba(225,6,0,.5)}
+  .btn-red:hover{background:#000;box-shadow:0 8px 22px -8px rgba(0,0,0,.4)}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-dark:hover{background:var(--red)}
+  @media(max-width:720px){.nav-links{display:none}}
+
+  .hero{text-align:center;padding:92px 0 0}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--red);text-transform:uppercase;display:inline-flex;align-items:center;gap:9px}
+  .eyebrow .live{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pl 2s infinite}
+  @keyframes pl{50%{opacity:.3}}
+  h1.display{font-family:var(--sans);font-size:clamp(48px,9vw,112px);line-height:.96;font-weight:700;letter-spacing:-.04em;margin:22px auto 0;max-width:14ch}
+  h1.display .grad{color:var(--red)}
+  .hero p.lead{font-size:clamp(18px,2.2vw,23px);line-height:1.5;color:var(--muted);max-width:640px;margin:26px auto 0;font-weight:500}
+  .hero-cta{display:flex;gap:16px;justify-content:center;align-items:center;margin-top:34px;flex-wrap:wrap}
+  .hero-link{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--red);display:inline-flex;align-items:center;gap:6px}
+  .hero-link:hover{text-decoration:underline;color:var(--red)}
+
+  /* macbook + terminal */
+  .stage{margin-top:64px;padding-bottom:40px;perspective:1600px}
+  .macbook{max-width:880px;margin:0 auto;transform:rotateX(4deg);transform-style:preserve-3d;transition:transform .8s var(--ease)}
+  .stage:hover .macbook{transform:rotateX(1.5deg)}
+  .screen{background:#0b0b0d;border:10px solid #1c1c1e;border-radius:22px 22px 4px 4px;box-shadow:0 60px 120px -50px rgba(0,0,0,.55),0 0 0 1.5px #d8d8db;overflow:hidden;aspect-ratio:16/10.2;display:flex;flex-direction:column}
+  .menu{display:flex;align-items:center;gap:7px;padding:11px 15px;background:#161618;border-bottom:1px solid #232325;flex:none}
+  .menu .d{width:10px;height:10px;border-radius:50%}
+  .menu .t{margin-left:10px;font-family:var(--mono);font-size:11px;color:#7d7d85}
+  .menu .badge{margin-left:auto;font-family:var(--mono);font-size:9.5px;color:#30d158;border:1px solid rgba(48,209,88,.35);padding:2px 8px;border-radius:99px;letter-spacing:.06em}
+  .term{flex:1;font-family:var(--mono);font-size:clamp(9px,1.35vw,13px);line-height:1.9;padding:16px 20px;color:#c9c9d1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;text-align:left}
+  .term .l{white-space:pre-wrap;word-break:break-word;min-height:1.9em}
+  .p{color:var(--red-soft)}.dim{color:#66666e}.ok{color:#30d158}.wr{color:var(--amber)}.wh{color:#e9e9ec}
+  .cur{display:inline-block;width:8px;height:1.1em;background:var(--red-soft);vertical-align:-2px;margin-left:2px;animation:bk 1s steps(1) infinite}
+  @keyframes bk{50%{opacity:0}}
+  .prog i{display:inline-block}
+
+  .trust{padding:26px 0 70px;text-align:center}
+  .trust p{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.05em}
+
+  /* metrics strip */
+  .metrics{padding:0 0 90px}
+  .mrow{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:820px;margin:0 auto}
+  @media(max-width:640px){.mrow{grid-template-columns:1fr;max-width:340px}}
+  .mc{text-align:center;padding:28px 20px;border-radius:20px;background:var(--bg-2)}
+  .mc .v{font-family:var(--sans);font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.03em}
+  .mc .v em{font-style:normal;color:var(--red)}
+  .mc .l{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+
+  /* services */
+  .services{background:var(--bg-2);padding:96px 0}
+  .sec-top{text-align:center;margin-bottom:60px}
+  .sec-top .eyebrow{justify-content:center}
+  .sec-top h2{font-family:var(--sans);font-size:clamp(32px,5vw,58px);font-weight:700;letter-spacing:-.03em;margin-top:16px;line-height:1.02}
+  .sec-top p{color:var(--muted);font-size:18px;margin-top:16px;max-width:520px;margin-inline:auto;font-weight:500}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:860px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:540px){.svc-grid{grid-template-columns:1fr}}
+  .svc{background:var(--bg);border-radius:22px;padding:32px 28px 34px;border:1px solid var(--line);transition:transform .35s var(--ease),box-shadow .35s;position:relative;overflow:hidden}
+  .svc::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+  .svc:hover{transform:translateY(-6px);box-shadow:0 26px 55px -30px rgba(0,0,0,.28)}
+  .svc:hover::after{transform:scaleX(1)}
+  .svc .ic{width:46px;height:46px;border-radius:13px;background:var(--bg-2);display:grid;place-items:center;margin-bottom:20px;transition:background .3s}
+  .svc:hover .ic{background:rgba(225,6,0,.08)}
+  .svc .ic svg{width:22px;height:22px}
+  .svc .ic svg *{stroke:var(--red)}
+  .svc h3{font-family:var(--sans);font-size:21px;font-weight:600;letter-spacing:-.01em}
+  .svc p{color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:11px;font-weight:500}
+  .svc .num{font-family:var(--mono);font-size:11px;color:var(--red);float:right}
+
+  /* method */
+  .method{padding:96px 0 40px}
+  .msteps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+  @media(max-width:860px){.msteps{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.msteps{grid-template-columns:1fr}}
+  .ms{padding:26px 24px 30px;border-radius:20px;border:1px solid var(--line);position:relative;transition:border-color .3s}
+  .ms:hover{border-color:var(--red)}
+  .ms .n{font-family:var(--mono);font-size:12px;color:var(--red)}
+  .ms h4{font-family:var(--sans);font-size:18px;font-weight:600;margin-top:12px}
+  .ms p{font-size:13.5px;line-height:1.6;color:var(--muted);margin-top:8px;font-weight:500}
+
+  /* contact */
+  .contact{padding:100px 0}
+  .contact-inner{max-width:720px;margin:0 auto;text-align:center}
+  .contact-inner h2{font-family:var(--sans);font-size:clamp(34px,5vw,62px);font-weight:700;letter-spacing:-.03em;line-height:1}
+  .contact-inner h2 .grad{color:var(--red)}
+  .contact-inner p{color:var(--muted);font-size:18px;margin-top:18px;font-weight:500}
+  form{margin-top:42px;display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field.full{grid-column:1/-1}
+  label{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  input,select,textarea{font-family:var(--body);font-size:15px;font-weight:500;color:var(--ink);background:var(--bg-2);border:1px solid transparent;border-radius:12px;padding:14px 16px;width:100%;transition:.2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);background:#fff;box-shadow:0 0 0 4px rgba(225,6,0,.08)}
+  textarea{resize:vertical;min-height:96px}
+  form .btn-red{grid-column:1/-1;justify-content:center;padding:15px;font-size:15px;border-radius:14px}
+  .form-note{grid-column:1/-1;font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:center;margin-top:2px}
+  @media(max-width:560px){form{grid-template-columns:1fr}}
+
+  footer{border-top:1px solid var(--line);padding:38px 0}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .foot img{height:20px}
+  .foot p{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .xh line,.xh circle{stroke:var(--red)}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#ffffff">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#ffffff"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#e10600" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#e10600"/><line x1="600" y1="170" x2="600" y2="292" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#e10600" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#e10600" stroke-width="34" stroke-linecap="round"/></g></svg>
+</template>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="assets/redskill-dark.png" alt="RedSkill" /></a>
+      <div class="nav-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#metodo">Metodologia</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <a class="btn btn-dark" href="#contato">Solicitar orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="hero">
+  <div class="wrap">
+    <span class="eyebrow reveal"><span class="live"></span> Segurança ofensiva · operando no Brasil</span>
+    <h1 class="display reveal">Atacar para <span class="grad">proteger.</span></h1>
+    <p class="lead reveal">Encontramos as falhas antes dos invasores. Pentest, Red Team e defesa contínua, com a clareza e o rigor que a sua empresa precisa.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-red" href="#contato">Solicitar orçamento</a>
+      <a class="hero-link" href="#servicos">Conhecer serviços →</a>
+    </div>
+  </div>
+
+  <div class="stage reveal">
+    <div class="macbook">
+      <div class="screen">
+        <div class="menu">
+          <span class="d" style="background:#ff5f57"></span>
+          <span class="d" style="background:#febc2e"></span>
+          <span class="d" style="background:#28c840"></span>
+          <span class="t">redskill — engajamento ao vivo — zsh</span>
+          <span class="badge">● GRAVANDO EVIDÊNCIA</span>
+        </div>
+        <div class="term" id="term" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="trust">
+  <div class="wrap"><p class="reveal">CONFIANÇA DE EMPRESAS · STARTUPS · INSTITUIÇÕES FINANCEIRAS</p></div>
+</div>
+
+<section class="metrics">
+  <div class="wrap">
+    <div class="mrow">
+      <div class="mc reveal"><div class="v"><span data-count="500">0</span><em>+</em></div><div class="l">Testes conduzidos</div></div>
+      <div class="mc reveal"><div class="v"><span data-count="98">0</span><em>%</em></div><div class="l">Com falhas críticas achadas</div></div>
+      <div class="mc reveal"><div class="v"><span data-count="24">0</span><em>h</em></div><div class="l">Resposta de escopo</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicos">
+  <div class="wrap">
+    <div class="sec-top">
+      <span class="eyebrow reveal">// Serviços</span>
+      <h2 class="reveal">Defesa que pensa<br/>como o atacante.</h2>
+      <p class="reveal">Seis frentes para mapear, explorar e blindar toda a sua superfície de ataque.</p>
+    </div>
+    <div class="svc-grid" id="svc-grid"></div>
+  </div>
+</section>
+
+<section class="method" id="metodo">
+  <div class="wrap">
+    <div class="sec-top" style="margin-bottom:0">
+      <span class="eyebrow reveal">// Metodologia</span>
+      <h2 class="reveal">Da mira ao relatório.</h2>
+    </div>
+    <div class="msteps">
+      <div class="ms reveal"><span class="n">01</span><h4>Reconhecimento</h4><p>Mapeamos a superfície exposta — domínios, ativos, pessoas — como um invasor faria.</p></div>
+      <div class="ms reveal"><span class="n">02</span><h4>Exploração</h4><p>Encadeamos vetores e exploramos falhas com segurança, sem impacto à produção.</p></div>
+      <div class="ms reveal"><span class="n">03</span><h4>Pós-exploração</h4><p>Medimos o alcance real: movimentação lateral, escalada e acesso a dados.</p></div>
+      <div class="ms reveal"><span class="n">04</span><h4>Relatório & blindagem</h4><p>Achados priorizados, prova de conceito e plano de correção em português claro.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap">
+    <div class="contact-inner">
+      <h2 class="reveal">Vamos mapear o<br/>seu <span class="grad">risco.</span></h2>
+      <p class="reveal">Conte sobre o seu ambiente e devolvemos um escopo de avaliação em até 24h úteis.</p>
+      <form class="reveal" onsubmit="event.preventDefault();this.reset();alert('Solicitação enviada. Retornaremos em até 24h úteis.');">
+        <div class="field"><label>Nome / Empresa</label><input required placeholder="Sua empresa" /></div>
+        <div class="field"><label>E-mail corporativo</label><input type="email" required placeholder="voce@empresa.com.br" /></div>
+        <div class="field full"><label>Serviço de interesse</label>
+          <select>
+            <option>Pentest / Teste de Intrusão</option>
+            <option>Red Team</option>
+            <option>Análise de Vulnerabilidades</option>
+            <option>Resposta a Incidentes</option>
+            <option>Treinamento / Conscientização</option>
+            <option>Consultoria / Compliance</option>
+          </select>
+        </div>
+        <div class="field full"><label>Mensagem</label><textarea placeholder="Descreva seu ambiente e objetivo..."></textarea></div>
+        <button class="btn btn-red" type="submit">Solicitar orçamento</button>
+        <span class="form-note">Sigilo garantido: NDA + LGPD desde o primeiro contato.</span>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="assets/redskill-dark.png" alt="RedSkill" />
+      <p>© 2026 RedSkill — Atacar para proteger.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SERVICES=[
+  {n:'01',i:'<svg viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3z" stroke-width="1.7"/><path d="M7 9.5l2.5 2.5L7 14.5M12.5 14.5H17" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',t:'Pentest',d:'Testes de intrusão em aplicações, redes e infraestrutura, simulando ataques reais para revelar falhas antes que sejam exploradas.'},
+  {n:'02',i:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke-width="1.7"/><circle cx="12" cy="12" r="2.3" stroke-width="1.7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke-width="1.7" stroke-linecap="round"/></svg>',t:'Red Team',d:'Operações adversariais completas e furtivas para medir a real capacidade de detecção e resposta da organização.'},
+  {n:'03',i:'<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 4.5-3.2 7.5-8 9-4.8-1.5-8-4.5-8-9V7l8-4z" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8v4M12 15.5v.5" stroke-width="1.9" stroke-linecap="round"/></svg>',t:'Análise de Vulnerabilidades',d:'Mapeamento contínuo da superfície de ataque, priorizando o que de fato representa risco ao negócio.'},
+  {n:'04',i:'<svg viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4 12H2M22 12h-2M5 5l2 2M19 5l-2 2" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke-width="1.7"/></svg>',t:'Resposta a Incidentes',d:'Contenção, erradicação e investigação forense quando o incidente acontece, com plano de recuperação claro.'},
+  {n:'05',i:'<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l9 4-9 4-9-4 9-4z" stroke-width="1.7" stroke-linejoin="round"/><path d="M5 9.5V14c0 1.5 3.1 3 7 3s7-1.5 7-3V9.5" stroke-width="1.7" stroke-linecap="round"/></svg>',t:'Treinamento',d:'Conscientização e capacitação técnica das equipes, de phishing simulado a hardening prático.'},
+  {n:'06',i:'<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.7" stroke-linecap="round"/></svg>',t:'Compliance & LGPD',d:'Consultoria em LGPD e ISO 27001 para alinhar a segurança técnica às exigências regulatórias.'},
+];
+document.getElementById('svc-grid').innerHTML=SERVICES.map(s=>
+  `<div class="svc reveal"><span class="num">${s.n}</span><div class="ic">${s.i}</div><h3>${s.t}</h3><p>${s.d}</p></div>`).join('');
+
+/* ---- terminal: typed engagement loop ---- */
+(function(){
+  const term=document.getElementById('term');
+  const SCRIPT=[
+    {t:'cmd',c:'redskill recon --alvo empresa.com.br'},
+    {t:'out',c:'<span class="dim">[*] Mapeando superfície de ataque…</span>',d:500},
+    {t:'out',c:'<span class="dim">    ├─</span> 14 subdomínios <span class="dim">encontrados</span>'},
+    {t:'out',c:'<span class="dim">    ├─</span> 22/tcp ssh <span class="wr">OpenSSH 7.2 — desatualizado</span>'},
+    {t:'out',c:'<span class="dim">    └─</span> 3306/tcp mysql <span class="wr">exposto à internet</span>'},
+    {t:'cmd',c:'redskill exploit --safe --encadear',d:420},
+    {t:'out',c:'<span class="dim">[*] Encadeando vetores…</span>',d:650},
+    {t:'prog'},
+    {t:'out',c:'<span class="ok">[✓] Acesso obtido — privilégio elevado</span>',d:250},
+    {t:'out',c:'<span class="ok">[✓] Evidência gravada · 3 falhas críticas</span>'},
+    {t:'cmd',c:'redskill relatorio --pt-br --priorizado',d:420},
+    {t:'out',c:'<span class="dim">[*] Compilando achados + plano de correção…</span>',d:700},
+    {t:'out',c:'<span class="ok">[✓] Relatório entregue.</span> <span class="wh">Próximo passo: blindar.</span>',d:1600},
+  ];
+  const PROMPT='<span class="p">➜</span> <span class="wh">redskill</span><span class="dim"> ~ </span>';
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MAX=13;
+  function addLine(html){
+    const el=document.createElement('div');el.className='l';el.innerHTML=html;term.appendChild(el);
+    while(term.children.length>MAX)term.removeChild(term.firstChild);
+    return el;
+  }
+  if(reduce){SCRIPT.forEach(s=>{if(s.t==='cmd')addLine(PROMPT+'<span class="wh">'+s.c+'</span>');else if(s.t==='out')addLine(s.c);else addLine('<span class="dim">[██████████████████] 100%</span>')});return}
+  let i=0;
+  function step(){
+    if(i>=SCRIPT.length){setTimeout(()=>{term.innerHTML='';i=0;step()},2600);return}
+    const s=SCRIPT[i++];
+    if(s.t==='cmd'){
+      const el=addLine(PROMPT);let k=0;
+      (function type(){
+        el.innerHTML=PROMPT+'<span class="wh">'+s.c.slice(0,k)+'</span><span class="cur"></span>';
+        if(k++<s.c.length)setTimeout(type,26+Math.random()*30);
+        else{el.innerHTML=PROMPT+'<span class="wh">'+s.c+'</span>';setTimeout(step,s.d||300)}
+      })();
+    }else if(s.t==='prog'){
+      const el=addLine('');let p=0;
+      (function fill(){
+        p=Math.min(p+Math.random()*14,100);
+        const n=Math.round(p/100*18);
+        el.innerHTML='<span class="dim">['+'█'.repeat(n)+'░'.repeat(18-n)+'] '+Math.round(p)+'%</span>';
+        if(p<100)setTimeout(fill,110);else setTimeout(step,240);
+      })();
+    }else{
+      addLine(s.c);setTimeout(step,s.d||300);
+    }
+  }
+  const io=new IntersectionObserver(es=>{if(es[0].isIntersecting){io.disconnect();setTimeout(step,500)}},{threshold:.25});
+  io.observe(term);
+  setTimeout(()=>{if(i===0&&!term.children.length)step()},2500);
+})();
+
+/* reveal + counters */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('anim');
+  const rs=[...document.querySelectorAll('.reveal')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+  rs.forEach((el,i)=>{el.style.transitionDelay=(Math.min(i,5)*55)+'ms';io.observe(el)});
+  const show=()=>rs.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*.96)el.classList.add('in')});
+  requestAnimationFrame(show);addEventListener('load',show);
+  setTimeout(()=>rs.forEach(el=>el.classList.add('in')),2200);
+})();
+(function(){
+  const els=[...document.querySelectorAll('[data-count]')];
+  const run=el=>{const end=+el.dataset.count,t0=performance.now();
+    const tick=t=>{const p=Math.min((t-t0)/1400,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick)};
+    requestAnimationFrame(tick)};
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){run(e.target);io.unobserve(e.target)}}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

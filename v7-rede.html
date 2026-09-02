@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedSkill — Rede</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --red:#ff2d2d;--red-deep:#e10600;--bg:#050507;--panel:#0d0d12;--line:#20202a;--line2:#2e2e3a;
+    --ink:#f4f4f7;--muted:#8b8b99;--green:#3ddc84;
+    --sans:'Space Grotesk',-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(.22,.68,.16,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 36px}
+  @media(max-width:600px){.wrap{padding:0 20px}}
+  #net{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 10%,transparent 40%,rgba(5,5,7,.9) 100%)}
+
+  .progress{position:fixed;top:0;left:0;height:2.5px;background:linear-gradient(90deg,var(--red-deep),var(--red));width:0;z-index:100;box-shadow:0 0 12px rgba(255,45,45,.7)}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:80;transition:.35s;border-bottom:1px solid transparent}
+  header.sc{background:rgba(5,5,7,.75);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand img{height:24px;display:block}
+  .nav-links{display:flex;align-items:center;gap:26px}
+  .nav-links a:not(.btn){font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.03em;transition:color .2s}
+  .nav-links a:not(.btn):hover{color:var(--ink)}
+  .btn{font-family:var(--mono);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:0;padding:12px 20px;border-radius:10px;transition:.25s;white-space:nowrap}
+  .btn-red{background:var(--red-deep);color:#fff;box-shadow:0 8px 30px -10px rgba(255,45,45,.7)}
+  .btn-red:hover{background:#fff;color:#000}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+  .btn-ghost:hover{border-color:var(--red);color:var(--red)}
+  @media(max-width:720px){.nav-links a:not(.btn){display:none}}
+
+  .reveal{opacity:1}
+  @media(prefers-reduced-motion:no-preference){
+    html.anim .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+    html.anim .reveal.in{opacity:1;transform:none}
+    html.anim .reveal.rl{transform:translateX(-44px)}
+    html.anim .reveal.rr{transform:translateX(44px)}
+    html.anim .reveal.in.rl,html.anim .reveal.in.rr{transform:none}
+  }
+
+  .hero{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;padding:110px 0 60px}
+  .hero-c{text-align:center;width:100%}
+  .pill{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.03);padding:8px 16px;border-radius:999px;letter-spacing:.05em;text-transform:uppercase}
+  .pill i{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pl 2s infinite}
+  @keyframes pl{50%{opacity:.3}}
+  h1.h{font-size:clamp(50px,9.4vw,124px);line-height:.92;font-weight:700;letter-spacing:-.04em;margin:28px auto 0;max-width:12ch}
+  h1.h .red{color:var(--red);text-shadow:0 0 60px rgba(255,45,45,.45)}
+  .sub{font-size:clamp(16px,1.9vw,19.5px);line-height:1.55;color:var(--muted);max-width:560px;margin:26px auto 0}
+  .cta{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);animation:bob 2.2s ease-in-out infinite}
+  @keyframes bob{50%{transform:translate(-50%,8px)}}
+
+  section{position:relative;z-index:1}
+  .kick{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--red);text-transform:uppercase;letter-spacing:.1em}
+  .kick::before{content:"";width:28px;height:1px;background:var(--red)}
+  .h2{font-size:clamp(32px,5vw,62px);font-weight:700;letter-spacing:-.03em;line-height:1;margin-top:18px}
+  .h2 em{font-style:normal;color:var(--red)}
+
+  .stats{padding:60px 0}
+  .stats-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:640px){.stats-g{grid-template-columns:1fr}}
+  .st{background:linear-gradient(160deg,var(--panel),rgba(13,13,18,.4));border:1px solid var(--line);border-radius:18px;padding:34px 30px;text-align:center;backdrop-filter:blur(6px)}
+  .st .v{font-family:var(--mono);font-size:clamp(40px,4.8vw,58px);font-weight:700;letter-spacing:-.03em}
+  .st .v em{font-style:normal;color:var(--red)}
+  .st .l{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+  .services{padding:90px 0}
+  .zig{display:flex;flex-direction:column;gap:14px;margin-top:56px}
+  .z{display:grid;grid-template-columns:1fr 1fr;gap:0;background:linear-gradient(160deg,var(--panel),rgba(13,13,18,.5));border:1px solid var(--line);border-radius:20px;overflow:hidden;backdrop-filter:blur(6px);transition:border-color .3s}
+  .z:hover{border-color:rgba(255,45,45,.35)}
+  @media(max-width:760px){.z{grid-template-columns:1fr}}
+  .z .tx{padding:40px 38px}
+  .z .num{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .z:hover .num{color:var(--red)}
+  .z h3{font-size:clamp(22px,2.6vw,32px);font-weight:600;letter-spacing:-.02em;margin-top:14px}
+  .z p{font-size:15px;line-height:1.62;color:var(--muted);margin-top:12px;max-width:48ch}
+  .z .viz{border-left:1px solid var(--line);display:grid;place-items:center;padding:30px;min-height:190px;position:relative;overflow:hidden}
+  .z:nth-child(even) .viz{order:-1;border-left:0;border-right:1px solid var(--line)}
+  @media(max-width:760px){.z .viz{order:0!important;border:0!important;border-top:1px solid var(--line)!important;min-height:150px}}
+  .viz svg{width:min(200px,70%);height:auto;overflow:visible}
+  .viz .stroke{stroke:var(--red);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .viz .faint{stroke:var(--line2);fill:none;stroke-width:1.2}
+  .viz .dot{fill:var(--red)}
+  .viz .draw{stroke-dasharray:300;stroke-dashoffset:300}
+  .z.in .viz .draw{animation:draw 1.6s var(--ease) forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+
+  .contact{padding:40px 0 120px}
+  .cbox{background:linear-gradient(160deg,var(--panel),rgba(13,13,18,.55));border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(10px);overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+  @media(max-width:840px){.cbox{grid-template-columns:1fr}}
+  .cinfo{padding:54px 48px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;gap:40px}
+  @media(max-width:840px){.cinfo{border-right:0;border-bottom:1px solid var(--line)}}
+  .cinfo h2{font-size:clamp(30px,4vw,48px);font-weight:700;letter-spacing:-.03em;line-height:.98}
+  .cinfo h2 em{font-style:normal;color:var(--red)}
+  .cinfo .det{display:flex;flex-direction:column;gap:14px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .cinfo .det b{color:var(--ink);font-weight:500}
+  form{padding:48px;display:flex;flex-direction:column;gap:16px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  label{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  label::before{content:"› ";color:var(--red)}
+  input,select,textarea{font-family:var(--mono);font-size:14px;color:var(--ink);background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:11px;padding:13px 15px;width:100%;transition:.2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(255,45,45,.13)}
+  select option{background:#101016;color:var(--ink)}
+  textarea{resize:vertical;min-height:86px}
+  form .btn-red{justify-content:center;padding:15px;border-radius:12px}
+
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:42px 0}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .foot img{height:21px}
+  .foot p{font-family:var(--mono);font-size:12px;color:var(--muted)}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#050507">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#050507"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#ff2d2d" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#ff2d2d"/><line x1="600" y1="170" x2="600" y2="292" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/></g></svg>
+</template>
+</head>
+<body>
+<canvas id="net"></canvas>
+<div class="vignette"></div>
+<div class="progress" id="prog"></div>
+
+<header id="hdr">
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="assets/redskill-light.png" alt="RedSkill" /></a>
+      <div class="nav-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#contato">Contato</a>
+        <a class="btn btn-red" href="#contato">Solicitar orçamento</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="hero">
+  <div class="wrap hero-c">
+    <span class="pill reveal"><i></i> Segurança ofensiva · Brasil</span>
+    <h1 class="h reveal">Atacar para <span class="red">proteger.</span></h1>
+    <p class="sub reveal">Mapeamos cada nó da sua rede como um invasor faria — e fechamos as portas antes que alguém as encontre.</p>
+    <div class="cta reveal">
+      <a class="btn btn-red" href="#contato">Solicitar orçamento →</a>
+      <a class="btn btn-ghost" href="#servicos">Ver capacidades</a>
+    </div>
+  </div>
+  <div class="scroll-hint">scroll ↓</div>
+</main>
+
+<section class="stats">
+  <div class="wrap">
+    <div class="stats-g">
+      <div class="st reveal"><div class="v"><span data-count="500">0</span><em>+</em></div><div class="l">Testes conduzidos</div></div>
+      <div class="st reveal"><div class="v"><span data-count="98">0</span><em>%</em></div><div class="l">Com falhas críticas achadas</div></div>
+      <div class="st reveal"><div class="v"><span data-count="24">0</span><em>h</em></div><div class="l">Resposta de escopo</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicos">
+  <div class="wrap">
+    <span class="kick reveal">Capacidades</span>
+    <h2 class="h2 reveal">Cada conexão é uma <em>porta.</em><br/>Nós testamos todas.</h2>
+    <div class="zig" id="zig"></div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap">
+    <div class="cbox reveal">
+      <div class="cinfo">
+        <div>
+          <span class="kick">Contato</span>
+          <h2 style="margin-top:16px">Vamos mapear<br/>o seu <em>risco.</em></h2>
+        </div>
+        <div class="det">
+          <div><b style="color:var(--green)">●</b> Disponível para novos projetos</div>
+          <div>E-MAIL → <b>contato@redskill.com.br</b></div>
+          <div>ESCOPO → <b>devolvido em até 24h úteis</b></div>
+          <div>SIGILO → <b>NDA + LGPD desde o 1º contato</b></div>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault();this.reset();alert('Solicitação enviada. Retornaremos em até 24h úteis.');">
+        <div class="field"><label>Nome / Empresa</label><input required placeholder="sua empresa" /></div>
+        <div class="field"><label>E-mail corporativo</label><input type="email" required placeholder="voce@empresa.com.br" /></div>
+        <div class="field"><label>Serviço de interesse</label>
+          <select>
+            <option>Pentest / Teste de Intrusão</option>
+            <option>Red Team</option>
+            <option>Análise de Vulnerabilidades</option>
+            <option>Resposta a Incidentes</option>
+            <option>Treinamento / Conscientização</option>
+            <option>Consultoria / Compliance</option>
+          </select>
+        </div>
+        <div class="field"><label>Mensagem</label><textarea placeholder="descreva seu ambiente e objetivo..."></textarea></div>
+        <button class="btn btn-red" type="submit">Solicitar orçamento →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="assets/redskill-light.png" alt="RedSkill" />
+      <p>© 2026 RedSkill — Atacar para proteger.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* particle network */
+(function(){
+  const cv=document.getElementById('net'),ctx=cv.getContext('2d');
+  let W,H,pts=[],mx=-9999,my=-9999;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+    const n=Math.min(90,Math.floor(W*H/16000));
+    pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.6+.7}));}
+  size();addEventListener('resize',size);
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for(const p of pts){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      const dm=Math.hypot(p.x-mx,p.y-my);
+      if(dm<160){p.x+=(p.x-mx)/dm*.6;p.y+=(p.y-my)/dm*.6}
+    }
+    ctx.lineWidth=1;
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<130){ctx.strokeStyle=`rgba(255,45,45,${(1-d/130)*.16})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+    }
+    for(const p of pts){ctx.fillStyle='rgba(255,45,45,.55)';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* services zigzag */
+const VIZ={
+  pentest:'<svg viewBox="0 0 200 120"><rect class="faint" x="10" y="10" width="180" height="100" rx="10"/><path class="stroke draw" d="M40 60l25 25 55-55"/><circle class="dot" cx="160" cy="40" r="4"/></svg>',
+  red:'<svg viewBox="0 0 200 120"><circle class="faint" cx="100" cy="60" r="48"/><circle class="stroke draw" cx="100" cy="60" r="30"/><line class="stroke draw" x1="100" y1="6" x2="100" y2="34"/><line class="stroke draw" x1="100" y1="86" x2="100" y2="114"/><line class="stroke draw" x1="46" y1="60" x2="74" y2="60"/><line class="stroke draw" x1="126" y1="60" x2="154" y2="60"/><circle class="dot" cx="100" cy="60" r="5"/></svg>',
+  vuln:'<svg viewBox="0 0 200 120"><path class="faint" d="M100 8l60 26v30c0 30-24 46-60 52-36-6-60-22-60-52V34l60-26z"/><path class="stroke draw" d="M100 34v30M100 82v4"/></svg>',
+  ir:'<svg viewBox="0 0 200 120"><path class="faint" d="M20 90h160"/><path class="stroke draw" d="M20 90L60 55l30 20 35-40 55 30"/><circle class="dot" cx="125" cy="35" r="4.5"/></svg>',
+  train:'<svg viewBox="0 0 200 120"><path class="faint" d="M100 16l80 28-80 28-80-28 80-28z"/><path class="stroke draw" d="M45 56v26c0 12 25 22 55 22s55-10 55-22V56"/></svg>',
+  comp:'<svg viewBox="0 0 200 120"><rect class="faint" x="45" y="10" width="110" height="100" rx="9"/><path class="stroke draw" d="M68 40h64M68 60h64M68 80h40"/></svg>'
+};
+const SERVICES=[
+  {n:'01',v:'pentest',t:'Pentest',d:'Testes de intrusão em aplicações, redes e infraestrutura, simulando ataques reais para revelar falhas antes que sejam exploradas.'},
+  {n:'02',v:'red',t:'Red Team',d:'Operações adversariais completas, multivetor e furtivas, para medir a real capacidade de detecção e resposta da sua organização.'},
+  {n:'03',v:'vuln',t:'Análise de Vulnerabilidades',d:'Mapeamento contínuo da superfície de ataque, priorizando o que de fato representa risco ao negócio.'},
+  {n:'04',v:'ir',t:'Resposta a Incidentes',d:'Contenção, erradicação e investigação forense quando o incidente acontece — com plano de recuperação claro.'},
+  {n:'05',v:'train',t:'Treinamento',d:'Conscientização e capacitação técnica das equipes, de phishing simulado a hardening prático.'},
+  {n:'06',v:'comp',t:'Compliance & LGPD',d:'Consultoria em LGPD e ISO 27001 para alinhar a segurança técnica às exigências regulatórias.'},
+];
+document.getElementById('zig').innerHTML=SERVICES.map((s,i)=>
+  `<div class="z reveal ${i%2?'rr':'rl'}"><div class="tx"><span class="num">[${s.n}]</span><h3>${s.t}</h3><p>${s.d}</p></div><div class="viz">${VIZ[s.v]}</div></div>`).join('');
+
+/* reveal + progress + header */
+(function(){
+  const hdr=document.getElementById('hdr'),prog=document.getElementById('prog');
+  addEventListener('scroll',()=>{
+    hdr.classList.toggle('sc',scrollY>30);
+    const h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h?scrollY/h*100:0)+'%';
+  },{passive:true});
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('anim');
+  const rs=[...document.querySelectorAll('.reveal')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});
+  rs.forEach(el=>io.observe(el));
+  const show=()=>rs.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*.96)el.classList.add('in')});
+  requestAnimationFrame(show);addEventListener('load',show);
+  setTimeout(()=>rs.forEach(el=>el.classList.add('in')),2400);
+})();
+(function(){
+  const els=[...document.querySelectorAll('[data-count]')];
+  const run=el=>{const end=+el.dataset.count,t0=performance.now();
+    const tick=t=>{const p=Math.min((t-t0)/1400,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick)};
+    requestAnimationFrame(tick)};
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){run(e.target);io.unobserve(e.target)}}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>
