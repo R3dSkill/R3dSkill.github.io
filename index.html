@@ -28,6 +28,7 @@
 <meta name="ext-resource-dependency" content="bundle/v21-glitch-studio.html" data-resource-id="b21" />
 <meta name="ext-resource-dependency" content="bundle/v22-redline.html" data-resource-id="b22" />
 <meta name="ext-resource-dependency" content="bundle/v23-antecipa.html" data-resource-id="b23" />
+<meta name="ext-resource-dependency" content="bundle/v24-glitchfusion.html" data-resource-id="b24" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -166,6 +167,17 @@
   .p14 .g14::before{color:#37e8ff;animation:pg1 2.6s steps(1) infinite}
   .p14 .g14::after{color:var(--red);animation:pg2 2.6s steps(1) infinite}
   .p14 .sun14{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:6px;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:10px;color:#8f8f9c}
+  .p24{background:#07070a;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .p24::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse 72% 62% at 50% 46%,#000,transparent 78%);mask-image:radial-gradient(ellipse 72% 62% at 50% 46%,#000,transparent 78%)}
+  .p24 .rings24{position:absolute;top:50%;left:50%;width:172px;height:172px;margin:-86px 0 0 -86px}
+  .p24 .rings24 i{position:absolute;inset:0;border:1px solid rgba(255,45,45,.32);border-radius:50%;animation:rg13 4.5s ease-out infinite}
+  .p24 .rings24 i:nth-child(2){animation-delay:1.5s}
+  .p24 .rings24 i:nth-child(3){animation-delay:3s}
+  .p24 .g14{position:relative;font-family:var(--sans);font-weight:700;font-size:30px;letter-spacing:-.03em;color:#f5f5f8}
+  .p24 .g14::before,.p24 .g14::after{content:attr(data-txt);position:absolute;inset:0;opacity:0}
+  .p24 .g14::before{color:#37e8ff;animation:pg1 2.6s steps(1) infinite}
+  .p24 .g14::after{color:var(--red);animation:pg2 2.6s steps(1) infinite}
+  .p24 .sun14{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:6px;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:10px;color:#8f8f9c}
   .p15{background:#0a0909;display:flex;align-items:center;padding:0 20px;position:relative;overflow:hidden}
   .p15::after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,47,47,.3),transparent 62%);filter:blur(26px);right:-40px;top:-40px}
   .p15 .t15{position:relative;font-family:var(--sans);font-weight:800;font-size:27px;line-height:.86;letter-spacing:-.05em;color:#f7f4f2;text-transform:none}
@@ -489,6 +501,20 @@
     <a class="card" href="v23-antecipa.html" data-res="b23" target="_blank" rel="noopener">
       <div class="prev preview-real"><img src="assets/thumbnails/v23-antecipa.jpg?v=6" alt="" loading="lazy" width="1440" height="900"></div>
       <div class="meta"><div class="vno">V23 · ANTECIPA</div><div class="vt">Antecipa — A brecha na defesa</div><div class="vd">O muro começa intacto. O scroll revela uma fissura discreta e uma linha encontra a passagem por trás da defesa. Serviços em sequência e mira própria.</div><div class="go">Abrir versão →</div></div>
+    </a>
+
+    <a class="card" href="v24-glitchfusion.html" data-res="b24" target="_blank" rel="noopener">
+      <div class="prev p24">
+        <span class="sun14">☾</span>
+        <div class="rings24"><i></i><i></i><i></i></div>
+        <div class="g14" data-txt="ATACAR">ATACAR</div>
+      </div>
+      <div class="meta">
+        <div class="vno">V24 · GLITCH FUSION ☀/☾</div>
+        <div class="vt">Glitch Fusion</div>
+        <div class="vd">O V14 (glitch bento) com o fundo do V13: aurora, grade mascarada e anéis de radar no lugar do campo de estrelas. Tema claro/escuro.</div>
+        <div class="go">Abrir versão →</div>
+      </div>
     </a>
   </div>
   <p class="foot">© 2026 RedSkill — Atacar para proteger.</p>
