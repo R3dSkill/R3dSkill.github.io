@@ -317,12 +317,44 @@ footer{overflow:hidden}
 }
 
 .wall-solid{opacity:calc(1 - var(--entry-reveal,0)*.12 - var(--exit-reveal,0)*.28);transition:opacity .35s ease-out}
+.hero-track.is-pinned .hero{position:sticky;top:var(--hero-top,86px)}
+.hero-track.is-pinned .hero-grid{min-height:0;height:calc(100svh - var(--hero-top) - 62px);padding:24px 0}
+.hero-track.is-pinned .breach-scene{height:min(690px,calc(100svh - var(--hero-top) - 110px))}
+.hero-track.is-pinned h1{font-size:clamp(68px,min(10vw,16vh),155px)}
+.hero-track.is-pinned .hero-description{margin-top:22px}
+.hero-track.is-pinned .hero-foot{padding:16px 0}
+.impact-bloom{opacity:var(--impact-flash,0);transform-box:fill-box;transform-origin:center;transform:scale(calc(.6 + var(--impact-flash,0)*.6));pointer-events:none}
+.entry-glow,.exit-glow{opacity:calc(.25 + var(--impact-flash,0)*.65)}
 .xray-mask-spot,.xray-content,.xray-reticle{opacity:var(--xray-active,0);transition:opacity .18s ease-out}
 .breach-heading{z-index:3;align-items:center}
 .xray-toggle{font:inherit;letter-spacing:inherit;background:transparent;color:#bb8472;border:0;border-bottom:1px solid #65473c;padding:8px 0;min-height:32px;white-space:nowrap;text-transform:uppercase;pointer-events:auto}
 .xray-toggle:hover,.xray-toggle[aria-pressed="true"]{color:#ff9d7e;border-color:#ff9d7e}
 .breach-scene.xray-on .breach-art{transform:none!important;transition:none}
 .target-cursor.is-xray .brackets{transform:rotate(45deg) scale(.7)}
+.report-paper{isolation:isolate;outline-offset:9px}
+.report-paper::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse 160px 190px at var(--inspect-x,50%) var(--inspect-y,45%),#ffffff85,transparent 75%);mix-blend-mode:soft-light;opacity:0;transition:opacity .35s}
+.report-paper.is-inspecting::after{opacity:1}
+.report-diagram>span{transition:transform .45s var(--ease),border-color .3s,background .3s,box-shadow .3s}
+.report-diagram>span.is-inspected{transform:translateY(-7px);background:#f9e8df;border-color:#cf6048;box-shadow:0 10px 20px -12px #a8342966;color:#a43e2c}
+.report-diagram>span.is-inspected b{color:#c6432d}
+.report-paper.is-inspecting .report-rule{width:100%;transition:width .8s var(--ease)}
+.report-rule{transition:width .65s var(--ease)}
+.report-lines i{transition:background .35s,transform .6s var(--ease);transform-origin:left}
+.report-paper.is-inspecting .report-lines i{background:#c0c9b2;transform:scaleX(.96)}
+.report-scan{position:absolute;inset:24px 16px auto;height:1px;background:linear-gradient(90deg,transparent,#ed785888,transparent);box-shadow:0 0 12px #f0744933;opacity:0;pointer-events:none;transform:translateY(var(--scan-y,100px));transition:opacity .3s,transform .18s ease-out;z-index:3}
+.report-paper.is-inspecting .report-scan{opacity:1}
+.report-insight{font:8px/1.7 var(--mono);color:#a05d48;min-height:28px;margin:28px 0 -28px;max-width:430px;text-align:center}
+@media(prefers-reduced-motion:no-preference){
+ .report-paper.is-inspecting{transform:perspective(1200px) rotateX(var(--inspect-tilt-x,0deg)) rotateY(var(--inspect-tilt-y,0deg)) rotate(-1deg) translateY(-5px)!important;transition:transform .3s ease-out}
+}
+.board-packet{stroke:#aee5df;stroke-width:1.7;stroke-linecap:round;stroke-dasharray:7 93;animation:board-flow 3.6s linear infinite;animation-delay:var(--lag,0s);animation-play-state:paused}
+.board-packet.power{stroke:#ff9c73;stroke-dasharray:12 88;animation-duration:4.8s}
+.board-led{animation:board-pulse 2.8s ease-in-out infinite;animation-delay:var(--lag,0s);animation-play-state:paused}
+.cpu-activity{fill:#81c6c0;animation:board-core 3.6s ease-in-out infinite;animation-play-state:paused}
+.xray-on.xray-inview .board-packet,.xray-on.xray-inview .board-led,.xray-on.xray-inview .cpu-activity{animation-play-state:running}
+@keyframes board-flow{to{stroke-dashoffset:-100}}
+@keyframes board-pulse{0%,100%{opacity:.25}40%,60%{opacity:1}}
+@keyframes board-core{0%,100%{opacity:.18}50%{opacity:.8}}
 @media(prefers-reduced-motion:reduce){.wall-solid{opacity:.72}}
 </style>
 <noscript><style>.service-tabs{display:none}.expertise-console{grid-template-columns:1fr}.service-panel[hidden]{display:flex;border-top:1px solid var(--line)}</style></noscript>
@@ -355,8 +387,11 @@ footer{overflow:hidden}
      <filter id="stone-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" seed="12" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComposite in2="SourceAlpha" operator="in"/></filter>
      <linearGradient id="cut-face"><stop stop-color="#581c16"/><stop offset=".45" stop-color="#bd412e"/><stop offset="1" stop-color="#351711"/></linearGradient>
      <radialGradient id="xray-feather"><stop offset="0" stop-color="#000"/><stop offset=".82" stop-color="#000"/><stop offset="1" stop-color="#fff"/></radialGradient>
-     <mask id="wall-xray-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="700" height="740" style="mask-type:luminance"><rect width="700" height="740" fill="#fff"/><circle class="xray-mask-spot" cx="303" cy="438" r="78" fill="url(#xray-feather)"/></mask>
-     <clipPath id="xray-window"><circle class="xray-clip-spot" cx="303" cy="438" r="76"/></clipPath>
+     <radialGradient id="impact-halo"><stop offset="0" stop-color="#ffb18a" stop-opacity=".8"/><stop offset=".16" stop-color="#ff7851" stop-opacity=".48"/><stop offset=".42" stop-color="#f74a2c" stop-opacity=".18"/><stop offset=".72" stop-color="#ed3922" stop-opacity=".045"/><stop offset="1" stop-color="#ed3922" stop-opacity="0"/></radialGradient>
+     <radialGradient id="impact-core"><stop offset="0" stop-color="#fff4d9"/><stop offset=".14" stop-color="#ffe0ac" stop-opacity=".9"/><stop offset=".4" stop-color="#ff9969" stop-opacity=".3"/><stop offset="1" stop-color="#ff7851" stop-opacity="0"/></radialGradient>
+     <filter id="impact-diffusion" x="-75%" y="-75%" width="250%" height="250%"><feGaussianBlur stdDeviation="5"/></filter>
+     <mask id="wall-xray-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="700" height="740" style="mask-type:luminance"><rect width="700" height="740" fill="#fff"/><circle class="xray-mask-spot" cx="303" cy="438" r="96" fill="url(#xray-feather)"/></mask>
+     <clipPath id="xray-window"><circle class="xray-clip-spot" cx="303" cy="438" r="94"/></clipPath>
      <pattern id="xray-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" stroke="#6f959d" stroke-opacity=".16" stroke-width=".7"/></pattern>
      <pattern id="brushed" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0h4" stroke="#ffffff" stroke-opacity=".035" stroke-width=".5"/></pattern>
     </defs>
@@ -386,10 +421,44 @@ footer{overflow:hidden}
     <g class="xray-content" clip-path="url(#xray-window)">
      <path d="m135 148 329 65v447l-329-66z" fill="#0e181c"/>
      <path d="m135 148 329 65v447l-329-66z" fill="url(#xray-grid)"/>
-     <g stroke="#6f969a" stroke-width=".7" opacity=".55"><path d="m157 207 276 54v312l-276-55z"/><path d="m183 230 223 44v271l-223-43z"/><path d="m210 252 170 34v229l-170-34z"/><path d="m158 332 276 55m-276 92 276 54"/></g>
-     <g stroke="#ff7056" stroke-width="1.3"><path d="m161 540 83-55 59-47 51-89 80-67"/><path d="m185 310 59 12v68l59 48" stroke-dasharray="3 5" opacity=".6"/></g>
-     <g fill="#0c161a" stroke="#ff8c6b"><circle cx="244" cy="485" r="4"/><circle cx="303" cy="438" r="5"/><circle cx="354" cy="349" r="4"/><circle cx="244" cy="322" r="3"/></g>
-     <g fill="#91afb0" font-family="monospace" font-size="7" letter-spacing=".5"><text x="267" y="414">CAMADA INTERNA</text><text x="313" y="459">PASSAGEM OCULTA</text><text x="251" y="305">CONEXÃO</text></g>
+     <g transform="translate(155 190) skewY(11)">
+      <rect width="288" height="365" rx="5" fill="#101e22" stroke="#4c747a" stroke-width="1"/>
+      <g stroke="#4d858a" stroke-width=".8" opacity=".7">
+       <path d="M24 30h48l30 30v42m-85-60h47l27 27v33M20 160h48l33-30m-81 43h55l36-33M130 155v45l-32 32v40m44-117v55l-30 30v32M155 150h42l24 24v46M155 137h52l26 27v56M150 112h30l25-28h31M150 99h25l25-29h36M70 306H40v-84l-18-18M168 291h29l34 34h34M168 304h26l32 34h39M260 106v70l-13 13v31"/>
+       <path d="M17 15h249v335H17z" stroke-dasharray="2 5"/>
+      </g>
+      <g fill="none">
+       <path class="board-packet power" pathLength="100" d="M24 30h48l30 30v42"/>
+       <path class="board-packet power" style="--lag:-2.4s" pathLength="100" d="M20 160h48l33-30"/>
+       <path class="board-packet" style="--lag:-.8s" pathLength="100" d="M150 112h30l25-28h31"/>
+       <path class="board-packet" style="--lag:-2s;animation-direction:reverse" pathLength="100" d="M150 99h25l25-29h36"/>
+       <path class="board-packet" style="--lag:-1.5s" pathLength="100" d="M130 155v45l-32 32v40"/>
+       <path class="board-packet" style="--lag:-.4s;animation-direction:reverse" pathLength="100" d="M142 155v55l-30 30v32"/>
+       <path class="board-packet" style="--lag:-2.8s" pathLength="100" d="M155 150h42l24 24v46"/>
+       <path class="board-packet power" style="--lag:-1s" pathLength="100" d="M260 106v70l-13 13v31"/>
+       <path class="board-packet" style="--lag:-1.8s" pathLength="100" d="M168 291h29l34 34h34"/>
+      </g>
+      <g fill="#071215" stroke="#86a8a8" stroke-width=".7">
+       <rect x="75" y="78" width="95" height="91" rx="3"/>
+       <rect x="87" y="90" width="71" height="67" rx="2" fill="#1f3337"/>
+       <path d="M96 78V67m12 11V67m12 11V67m12 11V67m12 11V67m12 11V67M96 169v11m12-11v11m12-11v11m12-11v11m12-11v11m12-11v11M75 95H64m11 12H64m11 12H64m11 12H64m11 12H64M170 95h11m-11 12h11m-11 12h11m-11 12h11m-11 12h11" stroke="#dc8b70"/>
+       <rect x="213" y="30" width="22" height="118" rx="2"/><rect x="244" y="30" width="22" height="118" rx="2"/>
+       <g fill="#334b4c"><path d="M218 40h12v20h-12zM218 68h12v20h-12zM218 96h12v20h-12zM249 40h12v20h-12zM249 68h12v20h-12zM249 96h12v20h-12z"/></g>
+       <path d="M217 133h15m-15 5h15m16-5h15m-15 5h15" stroke="#d5976d"/>
+       <rect x="65" y="268" width="110" height="49" rx="3"/>
+       <rect x="76" y="278" width="25" height="25" fill="#294348"/><rect x="108" y="278" width="25" height="25" fill="#294348"/>
+       <circle cx="165" cy="292" r="3"/>
+       <rect x="200" y="213" width="63" height="59" rx="2"/>
+       <path d="M210 222h42v22h-42zM215 227h32m-32 5h32m-32 5h32"/>
+       <rect x="23" y="42" width="25" height="38" rx="2"/><circle cx="34" cy="98" r="8"/><circle cx="34" cy="121" r="8"/>
+      </g>
+      <g fill="#eb9e82" font-family="monospace" text-anchor="middle" font-size="8"><text x="122" y="113">CPU</text><text x="122" y="128" font-size="6">OPERAÇÃO</text><text x="122" y="140" font-size="5">CORE / 01</text></g>
+      <g fill="#9bbcbc" font-family="monospace" font-size="6" letter-spacing=".4"><text x="210" y="164">RAM / EQUIPES</text><text x="66" y="331">SSD / DADOS</text><text x="199" y="285">REDE / CONEXÕES</text><text x="21" y="28">ENERGIA</text><text x="20" y="349">RS — BUSINESS CORE</text></g>
+      <g fill="#ef8f70"><circle class="board-led" cx="185" cy="112" r="2"/><circle class="board-led" style="--lag:-1.4s" cx="193" cy="112" r="2"/><circle class="board-led" style="--lag:-.7s" cx="251" cy="259" r="2"/></g>
+      <path class="cpu-activity" d="M99 146h6v3h-6zm9 0h6v3h-6zm9 0h6v3h-6zm9 0h6v3h-6zm9 0h6v3h-6z"/>
+      <g fill="#9bd9d2"><rect class="board-led" style="--lag:-.6s" x="219" y="122" width="11" height="3"/><rect class="board-led" style="--lag:-1.7s" x="250" y="122" width="11" height="3"/><circle class="board-led" style="--lag:-2.1s" cx="148" cy="292" r="2"/></g>
+      <g fill="#101e22" stroke="#607e80"><circle cx="8" cy="8" r="3"/><circle cx="280" cy="8" r="3"/><circle cx="8" cy="357" r="3"/><circle cx="280" cy="357" r="3"/></g>
+     </g>
     </g>
     <g class="wall-solid" mask="url(#wall-xray-mask)">
      <path id="wall-face" d="m135 148 329 65v447l-329-66z" fill="url(#graphite)" stroke="url(#edge)" stroke-width="1.1"/>
@@ -413,15 +482,20 @@ footer{overflow:hidden}
      <path class="entry-glow" pathLength="1" d="m46 605 163-83 94-84" stroke="#ed573b" stroke-width="3" filter="url(#hot-glow)"/>
      <path class="entry-line" pathLength="1" d="m46 605 163-83 94-84" stroke="#f37458" stroke-width="1"/>
     </g>
+    <g class="impact-bloom">
+     <ellipse cx="303" cy="438" rx="64" ry="73" fill="url(#impact-halo)" filter="url(#impact-diffusion)"/>
+     <circle cx="303" cy="438" r="20" fill="url(#impact-core)"/>
+     <circle cx="303" cy="438" r="1.4" fill="#fff1cd" opacity=".9"/>
+    </g>
     <g class="fault-callout" font-family="monospace" font-size="8" letter-spacing=".8">
      <path d="m304 438 53 10h218" stroke="#b25140" stroke-width=".7"/><text x="405" y="437" fill="#e48d79">BASTA UMA PEQUENA BRECHA.</text>
      <path d="M118 686h356" stroke="#343d3d" stroke-dasharray="3 5"/>
      <text x="121" y="707" fill="#707c7c">PARECE PROTEGIDO. ATÉ ALGUÉM TESTAR.</text>
     </g>
     <g class="xray-reticle" transform="translate(303 438)" pointer-events="none">
-     <circle r="77" stroke="#f47759" stroke-width=".65" opacity=".6"/><circle r="81" stroke="#f47759" stroke-width=".7" stroke-dasharray="9 118" opacity=".8"/>
-     <path d="M-87 0h12m150 0h12M0-87v12m0 150v12" stroke="#f47759" stroke-width=".8"/>
-     <text x="-74" y="-93" fill="#e3a38c" font-family="monospace" font-size="7" letter-spacing=".6">ALÉM DA SUPERFÍCIE.</text>
+     <circle r="95" stroke="#f47759" stroke-width=".65" opacity=".6"/><circle r="99" stroke="#f47759" stroke-width=".7" stroke-dasharray="9 146.5" opacity=".8"/>
+     <path d="M-105 0h12m186 0h12M0-105v12m0 186v12" stroke="#f47759" stroke-width=".8"/>
+     <text x="-92" y="-111" fill="#e3a38c" font-family="monospace" font-size="7" letter-spacing=".6">ALÉM DA SUPERFÍCIE.</text>
     </g>
    </svg>
    <div class="breach-phases"><span class="is-active">01 / SUPERFÍCIE</span><span>02 / BRECHA</span><span>03 / IMPACTO</span></div>
@@ -518,7 +592,8 @@ footer{overflow:hidden}
    panel.hidden=wasHidden;if(oldStyle===null)panel.removeAttribute('style');else panel.setAttribute('style',oldStyle);
   });
   stage.style.setProperty('--panel-height',height+'px');
-  stickyTop=innerWidth<=800?86:106;
+  const navBottom=document.querySelector('header').offsetHeight;
+  stickyTop=Math.max(navBottom+20,navBottom+(innerHeight-navBottom-sticky.offsetHeight)/2);
   sticky.style.setProperty('--pin-top',stickyTop+'px');
   stepDistance=Math.max(230,innerHeight*.42);
   pinned=!motion.matches&&sticky.offsetHeight<innerHeight-stickyTop-16;
@@ -562,6 +637,17 @@ footer{overflow:hidden}
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
  }
  const art=document.querySelector('.hero-art');
+ const hero=document.querySelector('.hero'),heroTrack=document.createElement('div');
+ heroTrack.className='hero-track';hero.before(heroTrack);heroTrack.append(hero);
+ let heroPinned=false,heroDistance=1200,heroTop=86;
+ function measureHero(){
+  heroTop=document.querySelector('header').offsetHeight;
+  heroPinned=!motion.matches&&innerWidth>800&&innerHeight>=760;
+  heroTrack.classList.toggle('is-pinned',heroPinned);
+  heroTrack.style.setProperty('--hero-top',heroTop+'px');
+  heroDistance=Math.max(1100,innerHeight*1.5);
+  heroTrack.style.height=heroPinned?(hero.offsetHeight+heroDistance)+'px':'auto';
+ }
  const lines=[...document.querySelectorAll('.impact,.process-step')];
  let queued=false;
  function update(){
@@ -571,25 +657,27 @@ footer{overflow:hidden}
   if(motion.matches)return;
   const rect=art.getBoundingClientRect();
   if(rect.bottom>0&&rect.top<innerHeight){
-   const t=Math.max(0,Math.min(1,(innerHeight*.22-rect.top)/(rect.height*.55)));
+   const t=Math.max(0,Math.min(1,heroPinned?(heroTop-heroTrack.getBoundingClientRect().top)/(heroDistance*.88):(innerHeight*.22-rect.top)/(rect.height*.55)));
    const phase=(a,b)=>{const p=Math.max(0,Math.min(1,(t-a)/(b-a)));return p*p*(3-2*p)};
    art.style.setProperty('--breach',t);
    art.style.setProperty('--crack-reveal',phase(.18,.48));
    art.style.setProperty('--entry-reveal',phase(.46,.73));
    art.style.setProperty('--exit-reveal',phase(.73,1));
+   art.style.setProperty('--impact-flash',phase(.68,.75)*(1-phase(.8,.97)));
    art.style.setProperty('--layer-shift',(phase(.7,1)*20)+'px');
    art.querySelectorAll('.breach-phases span').forEach((el,i)=>el.classList.toggle('is-active',i===(t<.18?0:t<.73?1:2)));
   }
   lines.forEach(el=>{const top=el.getBoundingClientRect().top;el.style.setProperty('--line-fill',Math.max(0,Math.min(1,(innerHeight*.88-top)/(innerHeight*.38))))});
  }
  function schedule(){if(!queued){queued=true;requestAnimationFrame(update)}}
- addEventListener('scroll',schedule,{passive:true});addEventListener('resize',()=>{measureServices();schedule()});
+ addEventListener('scroll',schedule,{passive:true});addEventListener('resize',()=>{measureHero();measureServices();schedule()});
  motion.addEventListener('change',()=>{
   document.documentElement.classList.remove('ready');
   stage.querySelectorAll('.panel-ghost').forEach(ghost=>{ghost.getAnimations().forEach(animation=>animation.cancel());ghost.remove()});
-  measureServices();schedule();
+  measureHero();measureServices();schedule();
  });
- document.fonts.ready.then(()=>{measureServices();schedule()});
+ document.fonts.ready.then(()=>{measureHero();measureServices();schedule()});
+ measureHero();
  measureServices();
  update();
 })();
@@ -637,12 +725,35 @@ footer{overflow:hidden}
  document.addEventListener('keydown',e=>{if(e.key==='Tab')hide()});
 })();
 
+/* Inspect the report: light follows the pointer, evidence responds by chapter. */
+(function(){
+ const scene=document.querySelector('.report-scene'),paper=scene.querySelector('.report-paper');
+ const parts=[...paper.querySelectorAll('.report-diagram>span')];
+ const messages=['01 / ENTENDER — Evidência com contexto.','02 / PRIORIZAR — Clareza sobre o que vem primeiro.','03 / EVOLUIR — Próximos passos para a defesa.'];
+ const hint=document.createElement('p');hint.className='report-insight';hint.setAttribute('aria-hidden','true');hint.textContent='PASSE A MIRA PARA INSPECIONAR';paper.after(hint);
+ const scan=document.createElement('span');scan.className='report-scan';scan.setAttribute('aria-hidden','true');paper.append(scan);
+ paper.tabIndex=0;paper.setAttribute('role','group');paper.setAttribute('aria-label','Relatório ilustrativo interativo. Use as setas para explorar: entender, priorizar e evoluir.');
+ let selected=0,frame=0,px=0,py=0;
+ function activate(index){selected=index;paper.classList.add('is-inspecting');parts.forEach((part,i)=>part.classList.toggle('is-inspected',i===index));hint.textContent=messages[index]}
+ function reset(){cancelAnimationFrame(frame);frame=0;paper.classList.remove('is-inspecting');parts.forEach(part=>part.classList.remove('is-inspected'));hint.textContent='PASSE A MIRA PARA INSPECIONAR'}
+ function move(){frame=0;const r=scene.getBoundingClientRect();const x=Math.max(0,Math.min(1,(px-r.left)/r.width)),y=Math.max(0,Math.min(1,(py-r.top)/r.height));
+  paper.style.setProperty('--inspect-x',x*100+'%');paper.style.setProperty('--inspect-y',y*100+'%');paper.style.setProperty('--inspect-tilt-x',(0.5-y)*8+'deg');paper.style.setProperty('--inspect-tilt-y',(x-.5)*10+'deg');paper.style.setProperty('--scan-y',Math.min(paper.offsetHeight-50,y*paper.offsetHeight)+'px');activate(Math.min(2,Math.floor(x*3)));
+ }
+ paper.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;px=e.clientX;py=e.clientY;if(!frame)frame=requestAnimationFrame(move)});
+ paper.addEventListener('pointerleave',()=>{if(document.activeElement!==paper)reset()});
+ paper.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){px=e.clientX;py=e.clientY;move()}});
+ paper.addEventListener('focus',()=>activate(selected));paper.addEventListener('blur',reset);
+ paper.addEventListener('keydown',e=>{if(e.key==='Escape'){reset();paper.blur();return}if(!['ArrowRight','ArrowLeft','ArrowDown','ArrowUp'].includes(e.key))return;e.preventDefault();activate((selected+(['ArrowRight','ArrowDown'].includes(e.key)?1:2))%3)});
+})();
+
 /* Local X-ray lens: masks only the front surface under the pointer. */
 (function(){
  const scene=document.querySelector('.breach-scene'),svg=scene.querySelector('svg');
  const face=document.getElementById('wall-face'),spot=scene.querySelector('.xray-mask-spot'),clip=scene.querySelector('.xray-clip-spot');
  const reticle=scene.querySelector('.xray-reticle'),toggle=scene.querySelector('.xray-toggle'),cursor=document.querySelector('.target-cursor');
  let pinned=false,frame=0,lastX=0,lastY=0;
+ const visibility=new IntersectionObserver(entries=>{scene.classList.toggle('xray-inview',entries[0].isIntersecting)});
+ visibility.observe(scene);
  function reveal(x,y){
   spot.setAttribute('cx',x);spot.setAttribute('cy',y);clip.setAttribute('cx',x);clip.setAttribute('cy',y);
   reticle.setAttribute('transform','translate('+x+' '+y+')');
@@ -667,7 +778,7 @@ footer{overflow:hidden}
  scene.addEventListener('pointerleave',hide);
  toggle.addEventListener('click',()=>{
   pinned=!pinned;toggle.setAttribute('aria-pressed',String(pinned));toggle.textContent=pinned?'Desativar raio-X ↗':'Ativar raio-X ↗';
-  if(pinned)reveal(303,438);else hide();
+  if(pinned)reveal(278,335);else hide();
  });
  scene.addEventListener('pointerdown',e=>{
   if(!pinned||e.target.closest('button'))return;
