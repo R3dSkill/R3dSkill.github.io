@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RedSkill — 18 versões</title>
+<title>RedSkill — Galeria de versões</title>
 <meta name="ext-resource-dependency" content="bundle/v1-terminal.html" data-resource-id="b1" />
 <meta name="ext-resource-dependency" content="bundle/v2-apple.html" data-resource-id="b2" />
 <meta name="ext-resource-dependency" content="bundle/v2-apple-pro.html" data-resource-id="b2pro" />
@@ -22,6 +22,12 @@
 <meta name="ext-resource-dependency" content="bundle/v15-aegis.html" data-resource-id="b15" />
 <meta name="ext-resource-dependency" content="bundle/v16-vector.html" data-resource-id="b16" />
 <meta name="ext-resource-dependency" content="bundle/v17-lumen.html" data-resource-id="b17" />
+<meta name="ext-resource-dependency" content="bundle/v18-glitchradar.html" data-resource-id="b18" />
+<meta name="ext-resource-dependency" content="bundle/v19-glitchradar-pro.html" data-resource-id="b19" />
+<meta name="ext-resource-dependency" content="bundle/v20-glitch-radar.html" data-resource-id="b20" />
+<meta name="ext-resource-dependency" content="bundle/v21-glitch-studio.html" data-resource-id="b21" />
+<meta name="ext-resource-dependency" content="bundle/v22-redline.html" data-resource-id="b22" />
+<meta name="ext-resource-dependency" content="bundle/v23-antecipa.html" data-resource-id="b23" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -106,6 +112,29 @@
   .p9 .g::after{color:var(--red);animation:pg2 2.6s steps(1) infinite}
   @keyframes pg1{0%,88%,100%{opacity:0;transform:none}90%{opacity:.85;transform:translate(-4px,2px);clip-path:polygon(0 10%,100% 10%,100% 45%,0 45%)}}
   @keyframes pg2{0%,88%,100%{opacity:0;transform:none}92%{opacity:.85;transform:translate(4px,-2px);clip-path:polygon(0 55%,100% 55%,100% 90%,0 90%)}}
+  .p18{background:#07070a;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .p18::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)}
+  .p18 .rdr18{position:absolute;top:50%;left:50%;width:230px;height:230px;transform:translate(-50%,-50%);border-radius:50%;
+    background:repeating-radial-gradient(circle at center,transparent 0 16px,rgba(255,255,255,.06) 16px 17px),
+      radial-gradient(circle,transparent 62%,rgba(7,7,10,.9) 82%);
+    -webkit-mask:radial-gradient(circle,#000 60%,transparent 78%);mask:radial-gradient(circle,#000 60%,transparent 78%)}
+  .p18 .rdr18::after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;border-radius:50%;transform:translate(-50%,-50%);background:var(--red);box-shadow:0 0 12px 2px rgba(255,45,45,.8)}
+  .p18 .sweep18{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 72%,rgba(255,45,45,.06) 86%,rgba(255,45,45,.42) 100%);animation:spin18 4.5s linear infinite}
+  @keyframes spin18{to{transform:rotate(360deg)}}
+  .p18 .g18{position:relative;font-family:var(--sans);font-weight:700;font-size:36px;letter-spacing:-.03em;color:#f4f4f7}
+  .p18 .g18::before,.p18 .g18::after{content:attr(data-txt);position:absolute;inset:0;opacity:0}
+  .p18 .g18::before{color:#37e8ff;animation:pg1 2.6s steps(1) infinite}
+  .p18 .g18::after{color:var(--red);animation:pg2 2.6s steps(1) infinite}
+  .p19 .g18{font-size:25px;transform:translateY(-32px)}
+  .p19 .ticks19{position:absolute;top:50%;left:50%;width:230px;height:230px;transform:translate(-50%,-50%);border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.22) 0 .7deg,transparent .7deg 9deg);-webkit-mask:radial-gradient(circle,transparent 60%,#000 63%,#000 70%,transparent 73%);mask:radial-gradient(circle,transparent 60%,#000 63%,#000 70%,transparent 73%)}
+  .p19 .ticks19.maj{background:repeating-conic-gradient(from 0deg,rgba(255,45,45,.6) 0 1.4deg,transparent 1.4deg 30deg);-webkit-mask:radial-gradient(circle,transparent 58%,#000 61%,#000 72%,transparent 75%);mask:radial-gradient(circle,transparent 58%,#000 61%,#000 72%,transparent 75%)}
+  .p19 .panel19{position:absolute;left:50%;bottom:15px;transform:translateX(-50%);display:flex;gap:7px}
+  .p19 .panel19 .ti{width:56px;padding:6px 0 7px;border-radius:8px;border:1px solid var(--line);background:rgba(9,9,13,.74);text-align:center;font-family:var(--mono)}
+  .p19 .panel19 .ti b{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em;line-height:1}
+  .p19 .panel19 .ti i{font-style:normal;font-size:7.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .p19 .panel19 .ti.crit b{color:#ff453a}
+  .p19 .panel19 .ti.warn b{color:#ffcc4d}
+  .p19 .panel19 .ti.ok b{color:#3ddc84}
   .p10{background:#050607;display:flex;align-items:center;padding:0 16px}
   .p10 .feed10{display:flex;flex-direction:column;gap:7px;font-family:var(--mono);font-size:8.5px;color:#7e8791;width:100%}
   .p10 .f10{display:flex;gap:7px;align-items:center;white-space:nowrap;overflow:hidden}
@@ -156,6 +185,17 @@
   .p17 .t17{position:relative;font-family:var(--sans);font-weight:800;font-size:19px;line-height:1.12;letter-spacing:-.035em;color:#f2f4f8;text-align:center}
   .p17 .t17 em{font-style:normal;color:#ff3b30}
   .foot{margin-top:60px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  /* One continuous gallery, faithful previews and aligned card footers. */
+  .card{display:flex;flex-direction:column;min-width:0}
+  .prev{height:auto;aspect-ratio:16/10;flex:none}
+  .preview-real{background:#101112}
+  .preview-real img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .card:hover .preview-real img{transform:scale(1.025)}
+  .meta{display:flex;flex-direction:column;flex:1}
+  .vd{margin-bottom:18px}
+  .go{margin-top:auto;padding-top:0}
+  @media(prefers-reduced-motion:reduce){.card,.preview-real img{transition:none!important}}
 </style>
 <template id="__bundler_thumbnail" data-bg-color="#070708">
 <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#070708"/><g transform="translate(600 400) scale(1) translate(-600 -400)"><circle cx="600" cy="400" r="150" fill="none" stroke="#ff2d2d" stroke-width="34" stroke-dasharray="60 52"/><circle cx="600" cy="400" r="46" fill="#ff2d2d"/><line x1="600" y1="170" x2="600" y2="292" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="600" y1="508" x2="600" y2="630" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="370" y1="400" x2="492" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/><line x1="708" y1="400" x2="830" y2="400" stroke="#ff2d2d" stroke-width="34" stroke-linecap="round"/></g></svg>
@@ -165,11 +205,11 @@
 <div class="wrap">
   <div class="top">
     <img src="assets/redskill-light.png" alt="RedSkill" />
-    <span>18 DIREÇÕES // PT-BR</span>
+    <span>24 DIREÇÕES // PT-BR</span>
   </div>
 
   <h1>Atacar para <em>proteger.</em></h1>
-  <p class="lead">Dezoito direções de landing page para a RedSkill — mesma marca, estéticas e slogans distintos. Abra cada uma e me diga qual seguir (ou combine elementos).</p>
+  <p class="lead">24 direções para a RedSkill. A mesma marca, diferentes perspectivas. Explore as versões e compare identidade, experiência e mensagem.</p>
 
   <div class="grid">
     <a class="card" href="v1-terminal.html" data-res="b1" target="_blank" rel="noopener">
@@ -412,8 +452,45 @@
         <div class="go">Abrir versão →</div>
       </div>
     </a>
-  </div>
 
+    <a class="card" href="v18-glitchradar.html" data-res="b18" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v18-glitchradar.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta">
+        <div class="vno">V18 · GLITCH RADAR</div>
+        <div class="vt">Glitch Radar</div>
+        <div class="vd">O V9 sem o campo de estrelas: mesmo glitch, agora sobre um radar que varre o fundo. Cards com tilt 3D e timeline no scroll.</div>
+        <div class="go">Abrir versão →</div>
+      </div>
+    </a>
+
+    <a class="card" href="v19-glitchradar-pro.html" data-res="b19" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v19-glitchradar-pro.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta">
+        <div class="vno">V19 · GLITCH RADAR PRO</div>
+        <div class="vt">Glitch Radar Pro</div>
+        <div class="vd">Mix de V9 + V2 + V6: radar de fundo, glitch, painel macbook de exposição, faixa bento com métricas que contam. Serviços em tilt e timeline.</div>
+        <div class="go">Abrir versão →</div>
+      </div>
+    </a>
+
+    <a class="card" href="v20-glitch-radar.html" data-res="b20" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v20-glitch-radar.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta"><div class="vno">V20 · GLITCH RADAR LCD</div><div class="vt">Glitch Radar — LCD</div><div class="vd">Radar em toda a tela, grade de fósforo, marcações e contatos iluminados pela varredura. A identidade Glitch com visual de instrumento.</div><div class="go">Abrir versão →</div></div>
+    </a>
+    <a class="card" href="v21-glitch-studio.html" data-res="b21" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v21-glitch-studio.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta"><div class="vno">V21 · GLITCH STUDIO</div><div class="vt">Glitch Studio</div><div class="vd">Glitch com respiro da Apple e serviços em bento claro. Radar ampliado de borda a borda e poucos pontos aleatórios.</div><div class="go">Abrir versão →</div></div>
+    </a>
+    <a class="card" href="v22-redline.html" data-res="b22" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v22-redline.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta"><div class="vno">V22 · REDLINE</div><div class="vt">Redline — Visão adversarial</div><div class="vd">Nova direção visual: radar protagonista, tipografia editorial, bento de evidências, expertise expansível e contato contextual.</div><div class="go">Abrir versão →</div></div>
+    </a>
+
+    <a class="card" href="v23-antecipa.html" data-res="b23" target="_blank" rel="noopener">
+      <div class="prev preview-real"><img src="assets/thumbnails/v23-antecipa.jpg" alt="" loading="lazy" width="1440" height="900"></div>
+      <div class="meta"><div class="vno">V23 · ANTECIPA</div><div class="vt">Antecipa — Negócios em movimento</div><div class="vd">Uma nova direção: off-white, preto e vermelho, escultura geométrica própria, expertise interativa e foco no valor para o negócio.</div><div class="go">Abrir versão →</div></div>
+    </a>
+  </div>
   <p class="foot">© 2026 RedSkill — Atacar para proteger.</p>
 </div>
 <script>

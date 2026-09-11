@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Segurança ofensiva com profundidade técnica e clareza para decidir. Pentest, Red Team e resposta a incidentes com a RedSkill.">
+<meta name="theme-color" content="#101112">
+<title>RedSkill — V22 · Redline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#101112;--ink:#f3f3ed;--muted:#9a9c9c;--red:#ff493f;--line:#ffffff20;--sans:'Space Grotesk',Arial,sans-serif;--body:'Manrope',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+::selection{background:var(--red);color:#101112}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button,a{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--red);outline-offset:6px}
+.wrap{width:min(1320px,calc(100% - 96px));margin:auto}
+.mono{font:10px/1.6 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.red{color:var(--red)}.muted{color:var(--muted)}
+.skip{position:fixed;top:10px;left:20px;transform:translateY(-180%);padding:14px;background:var(--ink);color:var(--bg);z-index:100}.skip:focus{transform:none}
+header{position:sticky;top:0;z-index:50;background:#101112ed;backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+nav{height:84px;display:flex;align-items:center;justify-content:space-between;gap:35px}
+.brand{display:flex;align-items:center;gap:22px}.brand img{display:block;width:142px;height:auto}.brand span{border-left:1px solid var(--line);padding-left:22px;font-size:9px;color:var(--muted);max-width:145px}
+.nav-links{display:flex;gap:30px;align-items:center;font-size:12px;color:#bebfba}.nav-links a:hover{color:var(--red)}
+.nav-cta{border:1px solid #ffffff50;padding:12px 17px;border-radius:5px;color:var(--ink)!important}.nav-cta:hover{background:var(--red);border-color:var(--red);color:var(--bg)!important}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero-top{display:flex;justify-content:space-between;gap:24px;padding-top:35px;color:#a6a8a5}
+.status{display:flex;align-items:center;gap:8px}.status::before{content:"";width:5px;height:5px;background:var(--red);box-shadow:0 0 0 4px #ff493f15;border-radius:50%}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.15fr 1fr;align-items:center;min-height:680px;padding:65px 0 80px}
+.hero-copy{position:relative;z-index:2}
+.eyebrow{display:flex;align-items:center;gap:12px}.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+h1{font-family:var(--sans);font-size:clamp(64px,7.9vw,115px);line-height:.91;letter-spacing:-.075em;font-weight:500;margin-top:29px}
+h1 .outline{color:var(--red);display:inline-block;position:relative}
+h1 .outline::after{content:attr(data-text);position:absolute;inset:0;color:#f9f4e9;opacity:0;clip-path:inset(45% 0 35%);animation:glitch 8s steps(1) infinite;pointer-events:none}
+@keyframes glitch{0%,96%,100%{opacity:0;transform:none}97%{opacity:.8;transform:translateX(5px)}98%{opacity:.5;transform:translateX(-4px)}}
+.hero-copy>p{font-size:15px;line-height:1.85;color:#acaeab;max-width:380px;margin-top:28px}
+.actions{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:31px}
+.button{display:inline-flex;align-items:center;justify-content:space-between;gap:30px;padding:16px 22px;background:var(--red);color:#171311;border:1px solid var(--red);font:600 13px var(--body);border-radius:5px;transition:background .2s,transform .2s}
+.button:hover{background:#ff6c5e;transform:translateY(-2px)}.button span{font-size:19px}
+.text-link{font:500 12px var(--body);border-bottom:1px solid #ffffff4d;padding:9px 0;display:inline-flex;gap:13px}.text-link:hover{color:var(--red)}
+.scope-note{display:flex;gap:12px;align-items:center;margin-top:34px;color:#80847f;font-size:9px}
+.scope-note i{width:14px;height:14px;border:1px solid #737870;border-radius:50%;display:inline-grid;place-items:center;font-style:normal;font-size:8px}
+.radar-scene{position:relative;height:560px;min-width:0;display:grid;place-items:center;margin-left:-25px}
+.radar-dial{position:relative;width:540px;max-width:115%;aspect-ratio:1;border:1px solid #ff493f40;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 calc(20% - 1px),#ff493f25 calc(20% - 1px) 20%);box-shadow:0 0 110px #ff493f06,inset 0 0 100px #ff493f05}
+.radar-dial::before{content:"";position:absolute;inset:13px;border:1px dashed #ff493f40;border-radius:50%}
+.radar-dial::after{content:"";position:absolute;inset:50%;width:8px;height:8px;transform:translate(-50%,-50%);background:var(--red);border-radius:50%;box-shadow:0 0 30px #ff493f}
+.cross{position:absolute;inset:0;border-radius:50%;background:linear-gradient(90deg,transparent calc(50% - .5px),#ff493f30 50%,transparent calc(50% + .5px)),linear-gradient(0deg,transparent calc(50% - .5px),#ff493f30 50%,transparent calc(50% + .5px));transform:rotate(30deg)}
+.sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg 280deg,#ff493f05 295deg,#ff493f32 359deg,#ff493fa0 360deg);animation:rotate 18s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.bearing{position:absolute;font:9px var(--mono);color:#ba6962}.bearing.n{top:-24px;left:48%}.bearing.s{bottom:-24px;left:48%}.bearing.e{right:-30px;top:49%}.bearing.w{left:-30px;top:49%}
+.blip{position:absolute;width:7px;height:7px;border-radius:50%;background:#ff675a;box-shadow:0 0 0 5px #ff493f12,0 0 18px #ff493f50}
+.blip.one{top:27%;left:65%}.blip.two{top:64%;left:26%}.blip.three{top:72%;left:70%}
+.target{position:absolute;top:22%;left:67%;border:1px solid #ff493f60;background:#191716e6;padding:9px 12px;border-radius:3px;min-width:155px;backdrop-filter:blur(12px)}
+.target .mono{font-size:8px;color:#a9a19b}.target b{display:block;font:500 11px var(--sans);margin-top:4px;color:#f5d2c5}.target::before{content:"";position:absolute;width:18px;height:1px;background:#ff493f70;left:-18px;top:22px}
+.radar-caption{position:absolute;bottom:-7px;left:15px;right:0;display:flex;justify-content:space-between;gap:15px;color:#777f76;font-size:8px}
+.hero-footer{padding:22px 0;display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);color:#878b85}
+.hero-footer b{color:#ced0c8;font-weight:400}.hero-footer .index{color:var(--red)}
+.intro{padding:95px 0 48px;display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:start}
+.intro h2{font:500 clamp(30px,3.7vw,52px)/1.13 var(--sans);letter-spacing:-.05em;max-width:860px}.intro h2 span{color:#7b8079}
+.intro .eyebrow{padding-top:9px}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;padding-bottom:100px}
+.tile{border:1px solid var(--line);background:#17191a;border-radius:10px;padding:32px;position:relative;overflow:hidden}
+.tile h3{font:500 28px/1.1 var(--sans);letter-spacing:-.04em}.tile p{font-size:13px;line-height:1.8;color:#a4a79e;max-width:350px}.tile .mono{font-size:9px}
+.tile-main{grid-column:span 7;padding:38px;min-height:335px;display:flex;flex-direction:column;justify-content:space-between;background:#eaeae2;color:#181a17;border-color:#eaeae2}
+.tile-main h3{font-size:clamp(34px,3.4vw,48px);max-width:420px;position:relative;z-index:2;margin-top:28px}
+.tile-main p{color:#6a6f65;margin-top:16px;max-width:300px;position:relative;z-index:2}
+.tile-main .mono{color:#686d64}.tile-main .card-arrow{position:absolute;right:28px;bottom:26px;color:#272b24;font-size:26px}
+.fingerprint{position:absolute;right:-85px;top:33px;width:310px;height:310px;border-radius:50%;background:repeating-radial-gradient(ellipse at center,transparent 0 9px,#b9bdb2 10px 11px);transform:rotate(-30deg) scaleX(.8);opacity:.65;mask-image:linear-gradient(90deg,transparent,#000)}
+.tile-report{grid-column:span 5;display:flex;flex-direction:column;justify-content:space-between}
+.tile-report h3{margin:18px 0 10px}
+.report-preview{border-top:1px solid #ffffff20;margin-top:24px;padding-top:16px;display:grid;gap:11px}
+.report-row{display:flex;align-items:center;gap:14px;font:9px var(--mono);color:#8d9688}.report-row i{width:5px;height:5px;background:var(--red);border-radius:50%}.report-row span:last-child{margin-left:auto;color:#d1d5c9}
+.report-row:nth-child(2) i{background:#c5a070}.report-row:nth-child(3) i{background:#96ad8b}
+.tile-small{grid-column:span 4;min-height:218px;display:flex;flex-direction:column;justify-content:space-between}
+.tile-small h3{font-size:25px;margin-top:32px}.tile-small p{margin-top:9px;font-size:12px}
+.tile-small .symbol{position:absolute;right:28px;top:22px;font:28px var(--sans);color:#7c8974}
+.tile-small.accent{background:var(--red);border-color:var(--red);color:#211914}.tile-small.accent p,.tile-small.accent .mono,.tile-small.accent .symbol{color:#54271e}
+.light-section{background:#eaeae2;color:#20221e;padding:95px 0}
+.section-heading{display:flex;justify-content:space-between;align-items:end;gap:35px;margin-bottom:44px}
+.section-heading h2{font:500 clamp(38px,4.8vw,68px)/1.03 var(--sans);letter-spacing:-.055em;margin-top:23px}
+.section-heading>p{font-size:13px;line-height:1.85;max-width:280px;color:#6c7167}
+.service-list{border-top:1px solid #c9ccc2}
+.service-list details{border-bottom:1px solid #c9ccc2}
+summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:20px;padding:27px 0}
+summary::-webkit-details-marker{display:none}summary .number{font:10px var(--mono);color:#797f73}summary h3{font:500 clamp(23px,2.7vw,36px) var(--sans);letter-spacing:-.04em}
+summary .plus{width:31px;height:31px;border:1px solid #bfc4b7;display:grid;place-items:center;border-radius:50%;font:20px var(--sans);transition:transform .2s}
+details[open] summary .plus{transform:rotate(45deg);background:var(--red);border-color:var(--red)}
+.service-body{padding:0 55px 28px 90px;display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:13px;line-height:1.85;color:#606859}
+.service-body a{display:inline-block;color:#bd332a;margin-top:15px;font-weight:600}.service-tags{display:flex;align-content:start;align-items:start;flex-wrap:wrap;gap:8px}.service-tags span{border:1px solid #c9ccc2;padding:5px 10px;border-radius:4px;font:9px/1.7 var(--mono);color:#626b59}
+.method{padding:100px 0}.method .section-heading>p{color:#939b8b}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.step{border-top:1px solid #626c55;padding-top:21px}.step .mono{color:var(--red)}.step h3{font:500 22px var(--sans);letter-spacing:-.03em;margin:25px 0 12px}.step p{font-size:12px;color:#989f91;line-height:1.9}
+.contact{padding:0 0 70px}.contact-box{background:#1a1d18;border:1px solid #343d2b;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.contact-copy{padding:48px;display:flex;flex-direction:column;justify-content:space-between;gap:38px}
+.contact-copy h2{font:500 clamp(38px,4vw,57px)/1.03 var(--sans);letter-spacing:-.06em;margin:27px 0 20px}.contact-copy p{color:#a4ac9b;font-size:13px;line-height:1.8;max-width:290px}
+.email{font:13px var(--mono);border-bottom:1px solid #5b674e;padding-bottom:8px;align-self:start}
+form{padding:48px;border-left:1px solid #343d2b;display:grid;gap:18px}
+.field{display:flex;flex-direction:column;gap:8px}label{font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#b1b9a7}
+input,select,textarea{width:100%;min-width:0;background:#131610;border:1px solid #38412f;border-radius:5px;padding:13px 14px;color:#e5e9de;font-size:12px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-offset:1px}textarea{resize:vertical;min-height:85px}
+form .button{width:100%}.form-note{font-size:10px;line-height:1.7;color:#a0aa95}.form-note a{text-decoration:underline}
+footer{padding:0 0 35px}.footer-top{border-top:1px solid var(--line);padding-top:30px;display:flex;justify-content:space-between;gap:20px;align-items:center}.footer-top img{width:110px}.footer-top p{font-size:9px;color:#8e9586}
+.footer-word{font:500 clamp(28px,10.4vw,145px)/.9 var(--sans);letter-spacing:-.075em;white-space:nowrap;color:#272d22;text-align:center;padding-top:55px}
+.reveal{opacity:1}
+@media(prefers-reduced-motion:no-preference){.ready .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}.ready .reveal.visible{opacity:1;transform:none}}
+@media(min-width:1600px){.hero-grid{min-height:740px}}
+@media(max-width:1100px){.wrap{width:calc(100% - 64px)}.brand span{display:none}.hero-grid{grid-template-columns:1.1fr 1fr}.radar-scene{height:470px}.radar-dial{width:450px}.target{min-width:130px;left:57%}h1{font-size:8.6vw}.tile{padding:26px}.contact-copy,form{padding:32px}}
+@media(max-width:760px){html{scroll-padding-top:85px}.wrap{width:calc(100% - 40px)}nav{height:72px;gap:20px}.brand img{width:116px}.nav-links>a:not(.nav-cta){display:none}.nav-cta{padding:10px 12px;font-size:11px}.hero-top{font-size:8px;padding-top:25px}.hero-top>span:last-child{display:none}.hero-grid{grid-template-columns:1fr;padding:48px 0 30px;min-height:0}.hero-copy{max-width:550px}h1{font-size:clamp(64px,12vw,90px);margin-top:24px}.hero-copy>p{font-size:14px;max-width:350px}.radar-scene{height:410px;margin:28px 0 0}.radar-dial{width:350px;max-width:85%}.target{left:60%;min-width:112px;padding:8px}.target b{font-size:9px}.target .mono{font-size:7px}.radar-caption{left:0;bottom:5px;font-size:7px}.hero-footer{font-size:8px;flex-wrap:wrap;gap:12px}.hero-footer>span:nth-child(3){display:none}.intro{padding:62px 0 32px;grid-template-columns:1fr;gap:25px}.intro h2{font-size:32px}.bento{padding-bottom:65px;gap:12px}.tile-main,.tile-report{grid-column:span 12}.tile-small{grid-column:span 6}.tile-small:last-child{grid-column:span 12;min-height:190px}.tile-main{min-height:315px}.tile-main h3{max-width:280px;font-size:38px}.tile-small h3{font-size:22px}.tile-small .symbol{font-size:22px;right:20px;top:18px}.tile-small .mono{font-size:8px}.section-heading{align-items:start;flex-direction:column;gap:24px}.section-heading>p{max-width:390px}.light-section,.method{padding:65px 0}.section-heading h2{font-size:44px}.service-body{grid-template-columns:1fr;padding:0 0 24px 40px;gap:20px}summary{grid-template-columns:24px 1fr 28px;gap:16px}summary h3{font-size:25px}.steps{grid-template-columns:repeat(2,1fr);gap:34px 22px}.contact-box{grid-template-columns:1fr}.contact-copy,form{padding:28px}form{border-left:0;border-top:1px solid #343d2b}.contact-copy h2{font-size:45px}.footer-top{align-items:start;flex-wrap:wrap}.footer-top p{font-size:8px}.footer-word{padding-top:38px}.bearing.e{right:-22px}.bearing.w{left:-22px}}
+@media(max-width:360px){.wrap{width:calc(100% - 32px)}h1{font-size:61px}.actions{gap:15px}.button{padding:14px 16px}.tile-small{grid-column:span 12}.radar-scene{height:340px}.brand img{width:100px}.nav-cta{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Scroll choreography and progressively enhanced service panels. */
+.reading-progress{position:fixed;left:0;top:0;width:100%;height:2px;z-index:90;background:var(--red);transform:scaleX(var(--page-progress,0));transform-origin:left;pointer-events:none}
+.service-item{border-bottom:1px solid #c9ccc2;position:relative}
+.service-trigger{width:100%;display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:20px;padding:27px 0;background:none;border:0;color:inherit;text-align:left}
+.service-trigger .number{font:10px var(--mono);color:#797f73;transition:color .35s}
+.service-trigger .service-name{font:500 clamp(23px,2.7vw,36px) var(--sans);letter-spacing:-.04em;transition:color .35s,transform .55s cubic-bezier(.2,.8,.2,1)}
+.service-trigger .plus{width:31px;height:31px;border:1px solid #bfc4b7;display:grid;place-items:center;border-radius:50%;font:20px var(--sans);transition:transform .55s,background .35s}
+.service-item.is-active .service-name{color:#be352b;transform:translateX(9px)}
+.service-item.is-active .number{color:#be352b}
+.service-item.is-active .plus{transform:rotate(135deg);background:var(--red);border-color:var(--red)}
+.service-panel{height:0;overflow:hidden;transition:height .65s cubic-bezier(.22,.68,.16,1);visibility:hidden}
+.service-item.is-active .service-panel{height:var(--service-panel-height,180px);visibility:visible}
+.service-item.is-closing .service-panel{visibility:visible}
+.service-panel .service-body{opacity:0;transform:translateY(12px);transition:opacity .35s,transform .55s}
+.service-item.is-active .service-body{opacity:1;transform:none;transition-delay:.13s}
+.step{position:relative}.step::before{content:"";position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--red);transform:scaleX(var(--step-progress,0));transform-origin:left}
+.radar-scene,.hero-copy{will-change:transform}
+.aim-cursor{position:fixed;left:0;top:0;width:42px;height:42px;z-index:120;pointer-events:none;color:#ff6758;opacity:0;transition:opacity .18s;filter:drop-shadow(0 0 3px #100b09);will-change:transform}
+.aim-cursor svg{display:block;width:100%;height:100%;overflow:visible}
+.aim-cursor .aim-ring{transform-origin:21px 21px;transition:transform .3s}
+.aim-cursor.is-link .aim-ring{transform:rotate(45deg) scale(.78)}
+.aim-cursor.is-link{color:#ff392d}.aim-cursor.is-down .aim-ring{transform:scale(.6)}
+.aim-cursor.is-visible{opacity:1}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  html.aim-enabled,html.aim-enabled body,html.aim-enabled a,html.aim-enabled button,html.aim-enabled summary{cursor:none}
+  html.aim-enabled input,html.aim-enabled textarea{cursor:text}
+  html.aim-enabled select,html.aim-enabled label{cursor:auto}
+}
+@media(prefers-reduced-motion:no-preference){
+  .ready .reveal{transform:translateY(38px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--reveal-delay,0ms)}
+  .ready .reveal.visible{transform:none}
+  .ready .tile.reveal{transform:perspective(1200px) translateY(50px) rotateX(5deg);transform-origin:center bottom}
+  .ready .tile.reveal.visible{transform:perspective(1200px) translateY(0) rotateX(0)}
+  .ready .section-heading h2{clip-path:inset(0 0 100% 0);transition:clip-path 1s cubic-bezier(.2,.7,.2,1)}
+  .ready .section-heading.visible h2{clip-path:inset(-5% -5% -5% -5%)}
+  .fingerprint{transform:rotate(calc(-30deg + var(--art-turn,0deg))) scaleX(.8)}
+  .footer-word{transform:translateY(var(--footer-shift,0px));opacity:var(--footer-opacity,1)}
+}
+@media(max-width:760px){
+  .service-trigger{grid-template-columns:24px 1fr 28px;gap:16px}
+  .service-trigger .service-name{font-size:25px}
+  .service-item.is-active .service-name{transform:translateX(4px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .aim-cursor{display:none}.reading-progress{display:none}
+  .hero-copy,.radar-scene,.footer-word{transform:none!important;opacity:1!important}
+  .step::before{transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<div class="aim-cursor" aria-hidden="true"><svg viewBox="0 0 42 42" fill="none"><g class="aim-ring" stroke="currentColor" stroke-width="1.3"><circle cx="21" cy="21" r="11" stroke-dasharray="10 7.28"/><path d="M21 1v10m0 20v10M1 21h10m20 0h10"/></g><circle cx="21" cy="21" r="1.8" fill="currentColor"/></svg></div>
+<a class="skip" href="#principal">Pular para o conteúdo</a>
+<header>
+  <nav class="wrap" aria-label="Navegação principal">
+    <a class="brand" href="#principal" aria-label="RedSkill — início"><img src="assets/redskill-light.png" alt="RedSkill"><span class="mono">Offensive security<br>Independent thinking</span></a>
+    <div class="nav-links"><a href="#abordagem">Abordagem</a><a href="#servicos">Expertise</a><a href="#metodo">Método</a><a class="nav-cta" href="#contato">Vamos conversar ↗</a></div>
+  </nav>
+</header>
+<main id="principal">
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero-top mono"><span class="status">Segurança ofensiva. Visão além do óbvio.</span><span>Brasil / perspectiva adversarial</span></div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow mono red">Atacar para proteger.</span>
+        <h1 id="hero-title">O risco existe.<br>A vantagem é<br><span class="outline" data-text="ver antes.">ver antes.</span></h1>
+        <p>Encontramos os caminhos que colocam seu negócio em risco. E entregamos a clareza para fechar cada um deles.</p>
+        <div class="actions"><a class="button" href="#contato">Mapear meu risco <span>↗</span></a><a class="text-link" href="#servicos">Explore nossa expertise <span>↓</span></a></div>
+        <div class="scope-note mono"><i>✓</i> Escopo definido. Evidência real. Próximo passo claro.</div>
+      </div>
+      <div class="radar-scene" role="img" aria-label="Ilustração de radar vermelho com três pontos e varredura circular">
+        <div class="radar-dial"><div class="cross"></div><div class="sweep"></div><span class="bearing n">000°</span><span class="bearing e">090°</span><span class="bearing s">180°</span><span class="bearing w">270°</span><i class="blip one"></i><i class="blip two"></i><i class="blip three"></i><div class="target"><span class="mono">Perspectiva adversarial</span><b>Além da superfície ↗</b></div></div>
+        <div class="radar-caption mono"><span>RS / ATTACK SURFACE INTELLIGENCE</span><span>VISUALIZAÇÃO CONCEITUAL</span></div>
+      </div>
+    </div>
+    <div class="hero-footer mono"><span><span class="index">01 /</span> <b>Pentest & Red Team</b></span><span><span class="index">02 /</span> Evidência antes de opinião</span><span><span class="index">03 /</span> Do técnico ao executivo</span><a href="#abordagem">Conheça a RedSkill ↓</a></div>
+  </div>
+</section>
+<section class="wrap" id="abordagem" aria-labelledby="approach-title">
+  <div class="intro reveal"><span class="eyebrow mono red">01 — A nossa perspectiva</span><h2 id="approach-title">Pensamos como quem ataca.<br><span>Trabalhamos por quem precisa<br>continuar avançando.</span></h2></div>
+  <div class="bento">
+    <article class="tile tile-main reveal"><div><span class="mono">01.1 / Profundidade técnica</span><h3>Não basta encontrar<br>uma falha.<br>Entenda o risco.</h3><p>Conectamos vulnerabilidade, contexto e impacto para revelar o risco que realmente importa.</p></div><div class="fingerprint" aria-hidden="true"></div><span class="card-arrow" aria-hidden="true">↗</span></article>
+    <article class="tile tile-report reveal"><div><span class="mono red">01.2 / Clareza para agir</span><h3>Da evidência<br>à próxima decisão.</h3><p>Um relatório que conversa com quem corrige e com quem decide.</p></div><div class="report-preview" aria-label="Estrutura da entrega"><div class="report-row"><i></i>ACHADO VALIDADO<span>01</span></div><div class="report-row"><i></i>IMPACTO NO NEGÓCIO<span>02</span></div><div class="report-row"><i></i>PLANO DE CORREÇÃO<span>03</span></div></div></article>
+    <article class="tile tile-small reveal"><span class="mono muted">01.3 / Visão adversarial</span><span class="symbol" aria-hidden="true">⌖</span><div><h3>Contexto muda tudo.</h3><p>O mesmo achado, em ambientes diferentes, pode representar riscos distintos.</p></div></article>
+    <article class="tile tile-small reveal"><span class="mono muted">01.4 / Parceria técnica</span><span class="symbol" aria-hidden="true">↔</span><div><h3>Do seu lado.</h3><p>Diálogo com sua equipe para transformar achados em melhorias práticas.</p></div></article>
+    <article class="tile tile-small accent reveal"><span class="mono">01.5 / Nosso princípio</span><span class="symbol" aria-hidden="true">↗</span><div><h3>Ataque com propósito.</h3><p>Cada teste tem um objetivo: fortalecer a capacidade de defesa do seu negócio.</p></div></article>
+  </div>
+</section>
+<section class="light-section" id="servicos" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="section-heading reveal"><div><span class="eyebrow mono">02 — Expertise</span><h2>Seu desafio.<br>Nossa próxima missão.</h2></div><p>Do primeiro diagnóstico aos cenários mais complexos. A profundidade certa para cada objetivo.</p></div>
+    <div class="service-list">
+      <details open><summary><span class="number">01</span><h3>Pentest</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Testes de intrusão para validar a segurança de aplicações, APIs, redes e infraestrutura. Evidências contextualizadas e orientação de correção.<br><a href="#contato" data-service="Pentest">Conversar sobre Pentest ↗</a></div><div class="service-tags"><span>WEB & API</span><span>MOBILE</span><span>INFRAESTRUTURA</span><span>CLOUD</span></div></div></details>
+      <details><summary><span class="number">02</span><h3>Red Team</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Simulações adversariais com objetivos e limites acordados, para avaliar a capacidade de prevenção, detecção e resposta da organização.<br><a href="#contato" data-service="Red Team">Conversar sobre Red Team ↗</a></div><div class="service-tags"><span>CENÁRIOS ADVERSARIAIS</span><span>DETECÇÃO</span><span>RESPOSTA</span></div></div></details>
+      <details><summary><span class="number">03</span><h3>Análise de vulnerabilidades</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Mapeamento de exposições e priorização por contexto. Um ponto de partida claro para reduzir a superfície de ataque.<br><a href="#contato" data-service="Análise de Vulnerabilidades">Mapear minha superfície ↗</a></div><div class="service-tags"><span>EXPOSIÇÃO</span><span>PRIORIZAÇÃO</span><span>GESTÃO DE RISCO</span></div></div></details>
+      <details><summary><span class="number">04</span><h3>Resposta a incidentes</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Investigação técnica, preservação de evidências e apoio à contenção e recuperação. Entenda o ocorrido e os próximos passos.<br><a href="#contato" data-service="Resposta a Incidentes">Conversar sobre um incidente ↗</a></div><div class="service-tags"><span>FORENSE</span><span>CONTENÇÃO</span><span>RECUPERAÇÃO</span></div></div></details>
+      <details><summary><span class="number">05</span><h3>Treinamento & conscientização</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Capacitação técnica e conscientização adaptadas ao papel de cada equipe. Conhecimento aplicável à rotina da sua operação.<br><a href="#contato" data-service="Treinamento">Capacitar minha equipe ↗</a></div><div class="service-tags"><span>WORKSHOPS</span><span>SEGURANÇA APLICADA</span><span>CULTURA</span></div></div></details>
+      <details><summary><span class="number">06</span><h3>Compliance & LGPD</h3><span class="plus" aria-hidden="true">+</span></summary><div class="service-body"><div>Apoio técnico para alinhar práticas de segurança e proteção de dados às exigências do negócio.<br><a href="#contato" data-service="Compliance & LGPD">Conversar sobre compliance ↗</a></div><div class="service-tags"><span>GOVERNANÇA</span><span>PROTEÇÃO DE DADOS</span><span>PROCESSOS</span></div></div></details>
+    </div>
+  </div>
+</section>
+<section class="method wrap" id="metodo" aria-labelledby="method-title">
+  <div class="section-heading reveal"><div><span class="eyebrow mono red">03 — Método</span><h2>Rigor em cada etapa.<br>Clareza em cada entrega.</h2></div><p>Você sabe o que será testado, acompanha o que encontramos e entende o que fazer depois.</p></div>
+  <div class="steps">
+    <article class="step reveal"><span class="mono">01 / Alinhar</span><h3>Primeiro, contexto.</h3><p>Objetivos, ativos, limites e regras de execução definidos em conjunto com sua equipe.</p></article>
+    <article class="step reveal"><span class="mono">02 / Investigar</span><h3>Olhar de atacante.</h3><p>Mapeamento e validação técnica dos caminhos de ataque dentro do escopo acordado.</p></article>
+    <article class="step reveal"><span class="mono">03 / Traduzir</span><h3>Evidência em decisão.</h3><p>Achados organizados por risco, com contexto de negócio e recomendações práticas.</p></article>
+    <article class="step reveal"><span class="mono">04 / Evoluir</span><h3>Fechar o ciclo.</h3><p>Alinhamento das correções e definição de uma revalidação conforme o engajamento.</p></article>
+  </div>
+</section>
+<section class="contact wrap" id="contato" aria-labelledby="contact-title">
+  <div class="contact-box reveal">
+    <div class="contact-copy"><div><span class="eyebrow mono red">04 — Próximo passo</span><h2 id="contact-title">Coloque seu risco<br>no nosso radar.</h2><p>Conte o que você precisa proteger. Nós ajudamos a definir por onde começar.</p></div><a class="email" href="mailto:contato@redskill.com.br">contato@redskill.com.br ↗</a></div>
+    <form id="contact-form">
+      <div class="field"><label for="name">Nome / Empresa</label><input id="name" name="name" required autocomplete="organization" placeholder="Como podemos chamar você?"></div>
+      <div class="field"><label for="email">E-mail corporativo</label><input type="email" id="email" name="email" required autocomplete="email" placeholder="voce@empresa.com.br"></div>
+      <div class="field"><label for="service">Qual é o seu desafio?</label><select id="service" name="service"><option>Pentest</option><option>Red Team</option><option>Análise de Vulnerabilidades</option><option>Resposta a Incidentes</option><option>Treinamento</option><option>Compliance & LGPD</option><option>Quero orientação para definir</option></select></div>
+      <div class="field"><label for="message">Um pouco de contexto</label><textarea id="message" name="message" placeholder="Seu ambiente, objetivo e o melhor momento para começar."></textarea></div>
+      <button class="button" type="submit">Preparar conversa por e-mail <span>↗</span></button>
+      <p class="form-note">Seu aplicativo de e-mail será aberto com a mensagem pronta para você revisar e enviar.</p><p id="form-status" class="form-note" role="status"></p>
+    </form>
+  </div>
+</section>
+</main>
+<footer class="wrap"><div class="footer-top"><a href="#principal" aria-label="RedSkill — voltar ao início"><img src="assets/redskill-light.png" alt="RedSkill"></a><p class="mono">© 2026 RedSkill · Segurança ofensiva</p><a href="#principal" class="mono muted">De volta ao radar ↑</a></div><div class="footer-word" aria-hidden="true">ATACAR. PROTEGER.</div></footer>
+<script>
+document.getElementById('contact-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  const data=new FormData(this);
+  const body='Nome / Empresa: '+data.get('name')+'\nE-mail: '+data.get('email')+'\nServiço: '+data.get('service')+'\n\n'+data.get('message');
+  const href='mailto:contato@redskill.com.br?subject='+encodeURIComponent('Novo projeto · '+data.get('service'))+'&body='+encodeURIComponent(body);
+  const status=document.getElementById('form-status');
+  status.replaceChildren(document.createTextNode('Continue no seu aplicativo de e-mail. Se ele não abriu, '));
+  const retry=document.createElement('a');retry.href=href;retry.textContent='abra a mensagem aqui';status.append(retry);
+  location.href=href;
+});
+/* Native details remain usable without JavaScript; enhance them into animated panels. */
+(function(){
+  const motion=matchMedia('(prefers-reduced-motion: reduce)');
+  const list=document.querySelector('.service-list');
+  let active=0,manualAt=null,lastCandidate=-1,queued=false;
+  const items=[...list.querySelectorAll('details')].map((detail,index)=>{
+    const item=document.createElement('article');item.className='service-item';
+    const summary=detail.querySelector('summary');
+    const trigger=document.createElement('button');trigger.type='button';trigger.className='service-trigger';
+    trigger.id='service-trigger-'+index;
+    const number=summary.querySelector('.number').cloneNode(true);
+    const title=document.createElement('span');title.className='service-name';title.textContent=summary.querySelector('h3').textContent;
+    trigger.append(number,title,summary.querySelector('.plus').cloneNode(true));
+    const panel=document.createElement('div');panel.className='service-panel';panel.id='service-panel-'+index;
+    panel.setAttribute('role','region');panel.setAttribute('aria-labelledby',trigger.id);
+    trigger.setAttribute('aria-controls',panel.id);
+    panel.append(detail.querySelector('.service-body'));
+    item.append(trigger,panel);detail.replaceWith(item);
+    trigger.addEventListener('click',()=>{manualAt=scrollY;activate(active===index?-1:index)});
+    panel.addEventListener('transitionend',e=>{if(e.propertyName==='height')item.classList.remove('is-closing')});
+    return {item,trigger,panel};
+  });
+  function activate(index){
+    active=index;
+    items.forEach((entry,i)=>{
+      const open=i===index,wasOpen=entry.item.classList.contains('is-active');
+      entry.item.classList.toggle('is-closing',wasOpen&&!open&&!motion.matches);
+      entry.item.classList.toggle('is-active',open);
+      entry.trigger.setAttribute('aria-expanded',String(open));
+      entry.panel.setAttribute('aria-hidden',String(!open));
+      entry.panel.inert=!open;
+    });
+  }
+  function measure(){
+    const tallest=Math.max(...items.map(entry=>entry.panel.firstElementChild.getBoundingClientRect().height));
+    list.style.setProperty('--service-panel-height',Math.ceil(tallest+4)+'px');
+  }
+  activate(0);measure();
+  document.querySelectorAll('[data-service]').forEach(link=>link.addEventListener('click',()=>{
+    document.getElementById('service').value=link.dataset.service;
+  }));
+  if('IntersectionObserver' in window&&!motion.matches){
+    document.documentElement.classList.add('ready');
+    document.querySelectorAll('.bento,.steps').forEach(group=>[...group.children].forEach((el,i)=>el.style.setProperty('--reveal-delay',(i%3)*90+'ms')));
+    const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}
+    }),{threshold:.1});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  }
+  const hero=document.querySelector('.hero');
+  const copy=document.querySelector('.hero-copy'),radar=document.querySelector('.radar-scene');
+  const bento=document.querySelector('.bento'),footer=document.querySelector('.footer-word');
+  const steps=[...document.querySelectorAll('.step')];
+  const clamp=(n,min,max)=>Math.max(min,Math.min(n,max));
+  function update(){
+    queued=false;
+    const vh=innerHeight;
+    document.documentElement.style.setProperty('--page-progress',scrollY/Math.max(1,document.documentElement.scrollHeight-vh));
+    if(motion.matches)return;
+    const rect=list.getBoundingClientRect();
+    /* A stable overall panel height prevents scroll-trigger feedback and layout jumps. */
+    if(rect.top<vh*.7&&rect.bottom>vh*.2){
+      const progress=clamp((vh*.62-rect.top)/Math.max(1,rect.height-vh*.22),0,.999);
+      const candidate=Math.floor(progress*items.length);
+      if(manualAt!==null&&Math.abs(scrollY-manualAt)>90)manualAt=null;
+      const focusInside=items.some(entry=>entry.item.contains(document.activeElement));
+      if(candidate!==lastCandidate&&manualAt===null&&!focusInside)activate(candidate);
+      lastCandidate=candidate;
+    }
+    const heroRect=hero.getBoundingClientRect();
+    if(heroRect.bottom>0){
+      const travel=clamp(-heroRect.top,0,800);
+      copy.style.transform='translateY('+travel*.12+'px)';
+      copy.style.opacity=clamp(1-travel/1100,.2,1);
+      radar.style.transform='translateY('+travel*.06+'px) rotate('+travel*.018+'deg)';
+    }
+    const br=bento.getBoundingClientRect();
+    if(br.bottom>0&&br.top<vh)bento.style.setProperty('--art-turn',((vh-br.top)*.045)+'deg');
+    steps.forEach(step=>step.style.setProperty('--step-progress',clamp((vh*.85-step.getBoundingClientRect().top)/(vh*.4),0,1)));
+    const fr=footer.getBoundingClientRect();
+    if(fr.top<vh){footer.style.setProperty('--footer-shift',clamp((fr.top-vh*.65)*.12,0,35)+'px');footer.style.setProperty('--footer-opacity',clamp((vh-fr.top)/(vh*.18),.2,1))}
+  }
+  function schedule(){if(!queued){queued=true;requestAnimationFrame(update)}}
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('resize',()=>{measure();schedule()});
+  document.fonts.ready.then(()=>{measure();schedule()});
+  motion.addEventListener('change',()=>{document.documentElement.classList.remove('ready');schedule()});
+  update();
+})();
+/* A restrained target reticle on fine pointers; native editing cursors are preserved. */
+(function(){
+  const media=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+  const aim=document.querySelector('.aim-cursor');
+  let x=0,y=0,drawX=0,drawY=0,frame=0,visible=false;
+  function paint(){
+    drawX+=(x-drawX)*.62;drawY+=(y-drawY)*.62;
+    aim.style.transform='translate3d('+(drawX-21)+'px,'+(drawY-21)+'px,0)';
+    if(visible&&(Math.abs(x-drawX)>.1||Math.abs(y-drawY)>.1))frame=requestAnimationFrame(paint);else frame=0;
+  }
+  function hide(){visible=false;aim.classList.remove('is-visible');document.documentElement.classList.remove('aim-enabled');cancelAnimationFrame(frame);frame=0}
+  document.addEventListener('pointermove',event=>{
+    if(!media.matches||event.pointerType==='touch'){hide();return}
+    if(event.target.closest('input,textarea,select,label,[contenteditable="true"]')){hide();return}
+    x=event.clientX;y=event.clientY;
+    if(!visible){drawX=x;drawY=y}
+    visible=true;document.documentElement.classList.add('aim-enabled');aim.classList.add('is-visible');
+    aim.classList.toggle('is-link',!!event.target.closest('a,button,summary'));
+    if(!frame)frame=requestAnimationFrame(paint);
+  },{passive:true});
+  document.addEventListener('pointerdown',()=>aim.classList.add('is-down'));
+  document.addEventListener('pointerup',()=>aim.classList.remove('is-down'));
+  document.documentElement.addEventListener('pointerleave',hide);
+  addEventListener('blur',hide);media.addEventListener('change',hide);
+  document.addEventListener('keydown',event=>{if(event.key==='Tab')hide()});
+})();
+</script>
+</body>
+</html>
