@@ -31,6 +31,7 @@
 <meta name="ext-resource-dependency" content="bundle/v24-glitchfusion.html" data-resource-id="b24" />
 <meta name="ext-resource-dependency" content="bundle/v25-glitchfusion-pro.html" data-resource-id="b25" />
 <meta name="ext-resource-dependency" content="bundle/v26-glitchfusion-sonar.html" data-resource-id="b26" />
+<meta name="ext-resource-dependency" content="bundle/v27-red-mascot.html" data-resource-id="b27" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -206,6 +207,10 @@
   .preview-real{background:#101112}
   .preview-real img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
   .card:hover .preview-real img{transform:scale(1.025)}
+  .p27{position:relative;overflow:hidden;background:#07070a;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:28px 28px}
+  .p27::before{content:"";position:absolute;width:210px;height:210px;border:1px solid rgba(255,45,45,.22);border-radius:50%;left:50%;top:46%;transform:translate(-50%,-50%);box-shadow:0 0 0 44px rgba(255,45,45,.055),0 0 0 88px rgba(255,45,45,.025)}
+  .p27 img{position:absolute;z-index:1;width:58%;height:auto;left:50%;bottom:-28%;transform:translateX(-50%);filter:drop-shadow(0 10px 18px rgba(0,0,0,.6));transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .card:hover .p27 img{transform:translateX(-50%) scale(1.035)}
   .meta{display:flex;flex-direction:column;flex:1}
   .vd{margin-bottom:18px}
   .go{margin-top:auto;padding-top:0}
@@ -219,11 +224,11 @@
 <div class="wrap">
   <div class="top">
     <img src="assets/redskill-light.png" alt="RedSkill" />
-    <span>26 DIREÇÕES // PT-BR</span>
+    <span>27 DIREÇÕES // PT-BR</span>
   </div>
 
   <h1>Atacar para <em>proteger.</em></h1>
-  <p class="lead">24 direções para a RedSkill. A mesma marca, diferentes perspectivas. Explore as versões e compare identidade, experiência e mensagem.</p>
+  <p class="lead">27 direções para a RedSkill. A mesma marca, diferentes perspectivas. Explore as versões e compare identidade, experiência e mensagem.</p>
 
   <div class="grid">
     <a class="card" href="v1-terminal.html" data-res="b1" target="_blank" rel="noopener">
@@ -541,6 +546,18 @@
         <div class="vno">V26 · GLITCH FUSION SONAR</div>
         <div class="vt">Glitch Fusion — Sonar</div>
         <div class="vd">A estrutura da V24 refinada: conteúdo da V22, nova mira técnica, radar pulsante e acabamento mais preciso sem descaracterizar o original.</div>
+        <div class="go">Abrir versão →</div>
+      </div>
+    </a>
+
+    <a class="card" href="v27-red-mascot.html" data-res="b27" target="_blank" rel="noopener">
+      <div class="prev p27">
+        <img src="assets/red-assets/red-reference.png" alt="" loading="lazy" width="1122" height="1402" />
+      </div>
+      <div class="meta">
+        <div class="vno">V27 · RED MASCOT</div>
+        <div class="vt">Glitch Fusion — Red em campo</div>
+        <div class="vd">A base refinada da V26 recebe o mascote Red no hero, com corpo e rabo independentes, movimento orgânico e adaptação dedicada para mobile.</div>
         <div class="go">Abrir versão →</div>
       </div>
     </a>
