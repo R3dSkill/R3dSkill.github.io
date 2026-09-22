@@ -1,7 +1,7 @@
 @import url("./v28-red-contact.css");
 
 .hero-intro{--red-size:min(76vw,620px);position:relative;isolation:isolate;min-height:calc(var(--red-size) * 1.25 + 48px);display:flex;flex-direction:column;justify-content:center;padding:48px 0}
-.hero-intro>.red-stage{position:absolute;z-index:-1;width:var(--red-size);max-width:none;left:50%;top:50%;margin:0;transform:translate(-50%,-50%);opacity:.5;pointer-events:none}
+.hero-intro>.red-stage{position:absolute;z-index:-1;width:var(--red-size);max-width:none;left:50%;top:calc(50% - 18px);margin:0;transform:translate(-50%,-50%);opacity:.5;pointer-events:none}
 .hero-intro .red-aura{display:none}
 .hero-intro .sys,.hero-intro .typed-wrap{position:relative;text-shadow:0 2px 12px var(--bg)}
 .hero-intro .hero-title{text-shadow:0 2px 24px rgba(0,0,0,.18)}
