@@ -19,11 +19,11 @@
   const serviceSelect = document.querySelector('#service');
   serviceSelect.replaceChildren(...[...fronts.map(([title]) => `Pentest — ${title}`), 'Quero orientação para definir'].map((label) => new Option(label, label)));
 
-  const mascot = document.querySelector('#red-mascot');
-  if (!mascot) return;
-
+  const mascots = [...document.querySelectorAll('.red-stage')];
+  if (!mascots.length) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const precisePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  mascots.forEach((mascot) => {
   const blinkFrame = mascot.querySelector('.red-blink');
   let blinkReady = false;
   let blinkTimer = 0;
@@ -115,5 +115,6 @@
   reducedMotion.addEventListener('change', () => {
     resetPose();
     updatePlayback();
+  });
   });
 })();
