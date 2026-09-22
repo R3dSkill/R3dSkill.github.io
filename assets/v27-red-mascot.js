@@ -28,25 +28,58 @@
   let blinkReady = false;
   let blinkTimer = 0;
   let openTimer = 0;
+  let firstBlink = true;
+  const rig = mascot.querySelector('.red-rig');
+  const tail = mascot.querySelector('.red-tail');
+  const portrait = mascot.querySelector('.red-portrait');
+  let frame = 0;
+  let lastTime = 0;
+  let elapsed = 0;
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+  const animate = (time) => {
+    const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 0;
+    lastTime = time;
+    elapsed += delta;
+    const easing = 1 - Math.exp(-7 * delta);
+    currentX += (targetX - currentX) * easing;
+    currentY += (targetY - currentY) * easing;
+    rig.style.transform = `translate3d(${currentX * 10}px,${currentY * 6}px,0) rotateX(${-currentY * 3}deg) rotateY(${currentX * 5}deg)`;
+    // Independent waves keep the tail moving through pointer entry and exit.
+    const swing = Math.sin(elapsed * 1.12) * 3.2 + Math.sin(elapsed * 1.87 + .6) * .65;
+    const flex = Math.sin(elapsed * 1.12 - .65) * .9;
+    tail.style.transform = `rotate(${swing}deg) skewY(${flex}deg) scaleX(${1 + Math.sin(elapsed * 1.12 - .9) * .012})`;
+    portrait.style.transform = `translate3d(${currentX * 3}px,${Math.sin(elapsed * 1.3) * 1.3}px,0)`;
+    frame = requestAnimationFrame(animate);
+  };
   const canBlink = () => blinkReady && !document.hidden && !reducedMotion.matches && mascot.dataset.visible === 'true';
   const scheduleBlink = () => {
     clearTimeout(blinkTimer);
     if (!canBlink()) return;
-    blinkTimer = setTimeout(() => blink(false), 2800 + Math.random() * 5900);
+    blinkTimer = setTimeout(() => blink(false), firstBlink ? 900 : 2400 + Math.random() * 3200);
   };
   const blink = (second) => {
     if (!canBlink()) return;
+    firstBlink = false;
     mascot.classList.add('is-blinking');
     openTimer = setTimeout(() => {
       mascot.classList.remove('is-blinking');
       if (!second && Math.random() < .18) {
         blinkTimer = setTimeout(() => blink(true), 160 + Math.random() * 150);
       } else scheduleBlink();
-    }, 95 + Math.random() * 65);
+    }, 170 + Math.random() * 60);
   };
 
   const updatePlayback = () => {
-    mascot.classList.toggle('is-active', !document.hidden && !reducedMotion.matches && mascot.dataset.visible === 'true');
+    const active = !document.hidden && !reducedMotion.matches && mascot.dataset.visible === 'true';
+    mascot.classList.toggle('is-active', active);
+    cancelAnimationFrame(frame);
+    lastTime = 0;
+    if (active) frame = requestAnimationFrame(animate);
+    else {
+      targetX = targetY = currentX = currentY = 0;
+      rig.style.transform = portrait.style.transform = '';
+      if (reducedMotion.matches) tail.style.transform = '';
+    }
     clearTimeout(openTimer);
     mascot.classList.remove('is-blinking');
     scheduleBlink();
@@ -66,8 +99,7 @@
   }
 
   const resetPose = () => {
-    mascot.style.setProperty('--red-look-x', '0deg');
-    mascot.style.setProperty('--red-look-y', '0deg');
+    targetX = targetY = 0;
   };
 
   mascot.addEventListener('pointermove', (event) => {
@@ -75,10 +107,11 @@
     const bounds = mascot.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - .5;
     const y = (event.clientY - bounds.top) / bounds.height - .5;
-    mascot.style.setProperty('--red-look-x', `${(x * 2.4).toFixed(2)}deg`);
-    mascot.style.setProperty('--red-look-y', `${(-y * 1.5).toFixed(2)}deg`);
+    targetX = Math.max(-1, Math.min(1, x * 2));
+    targetY = Math.max(-1, Math.min(1, y * 2));
   });
   mascot.addEventListener('pointerleave', resetPose);
+  mascot.addEventListener('pointercancel', resetPose);
   reducedMotion.addEventListener('change', () => {
     resetPose();
     updatePlayback();

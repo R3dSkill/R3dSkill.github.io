@@ -60,13 +60,13 @@
   filter:drop-shadow(0 20px 22px rgba(0,0,0,.34));
   will-change:transform;
 }
+.red-rig{position:absolute;inset:0;isolation:isolate;will-change:transform;transform-origin:55% 75%}
+.red-portrait{position:absolute;inset:0;z-index:1;will-change:transform}
 .red-stage .red-body{
   z-index:1;
   left:2.25%;
-  transform:rotateX(var(--red-look-y)) rotateY(var(--red-look-x));
   transform-origin:54% 62%;
   filter:drop-shadow(0 25px 28px rgba(0,0,0,.36));
-  transition:transform .7s cubic-bezier(.2,.8,.2,1);
   will-change:transform;
 }
 .red-stage .red-blink{z-index:2;opacity:0;clip-path:polygon(48% 28%,79% 28%,79% 39%,48% 39%);filter:none}
@@ -74,20 +74,7 @@
 .service-icon{display:block;width:52px;height:52px;color:var(--red);margin-bottom:24px;filter:drop-shadow(0 0 10px rgba(255,45,45,.25))}
 #servicos .tc{border-color:rgba(255,45,45,.2)}
 #servicos .tc h3{margin-top:0}
-.red-stage.is-active .red-tail{animation:redTailIdle 7.4s ease-in-out infinite alternate}
 .red-stage.is-active .red-aura{animation:redAura 4.8s ease-in-out infinite}
-.red-stage.is-active .red-body{animation:redBreath 5.6s ease-in-out infinite}
-
-@keyframes redTailIdle{
-  0%{transform:rotate(-.8deg) translate3d(-2px,2px,0) scaleX(.997)}
-  32%{transform:rotate(-.1deg) translate3d(-1px,0,0) scaleX(1)}
-  67%{transform:rotate(.65deg) translate3d(1px,-1px,0) scaleX(1.003)}
-  100%{transform:rotate(1.05deg) translate3d(2px,-2px,0) scaleX(1.005)}
-}
-@keyframes redBreath{
-  0%,100%{translate:0 0}
-  50%{translate:0 -2px}
-}
 @keyframes redAura{
   0%,100%{opacity:.68;scale:.96}
   50%{opacity:.92;scale:1.04}
