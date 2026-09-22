@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/v27-red-mascot.css" />
 </head>
-<body>
+<body data-service-count="9">
 <a class="skip-link" href="#top">Pular para o conteúdo</a>
 <div class="aur a1"></div><div class="aur a2"></div>
 <div class="progress" id="prog" aria-hidden="true"></div>
@@ -76,8 +76,9 @@
       <div class="b b-3 reveal">
         <span class="k">// Perspectiva adversarial</span>
         <h3>Além da superfície</h3>
-        <div class="radar">
-          <svg viewBox="0 0 200 200" fill="none">
+        <div class="radar" tabindex="0" role="group" aria-label="Radar interativo ilustrativo. Use as setas para explorar e Escape para retomar a varredura.">
+          <svg viewBox="0 0 200 200" fill="none" aria-hidden="true">
+            <circle class="radar-ticks" cx="100" cy="100" r="99" stroke="var(--red)" stroke-width="2" stroke-dasharray="1 9.37"/>
             <circle cx="100" cy="100" r="96" stroke="var(--line-2)" stroke-width="1.5"/>
             <circle cx="100" cy="100" r="64" stroke="var(--line)" stroke-width="1"/>
             <circle cx="100" cy="100" r="32" stroke="var(--line)" stroke-width="1"/>
@@ -88,7 +89,10 @@
           <div class="sweep"></div>
           <span class="blip blip-a"></span>
           <span class="blip blip-b"></span>
+          <span class="blip blip-c"></span>
+          <span class="radar-target" aria-hidden="true"></span>
         </div>
+        <div class="radar-caption" aria-hidden="true"><span class="radar-state">VARREDURA ATIVA</span><span class="radar-bearing">000°</span></div>
       </div>
       <div class="b b-2 reveal"><span class="k">01.3 / Visão adversarial</span><div class="principle">Contexto <em>muda tudo.</em></div><p>O mesmo achado, em ambientes diferentes, pode representar riscos distintos.</p></div>
       <div class="b b-2 reveal"><span class="k">01.4 / Parceria técnica</span><div class="principle">Do seu <em>lado.</em></div><p>Diálogo com sua equipe para transformar achados em melhorias práticas.</p></div>
@@ -101,7 +105,7 @@
   <div class="wrap">
     <div class="sec-top">
       <span class="kick reveal">02 — Tipos de pentest</span>
-      <h2 class="h2 reveal">Seis frentes<br/><em>de ataque.</em></h2>
+      <h2 class="h2 reveal">Nove frentes<br/><em>de ataque.</em></h2>
     </div>
     <div class="tilt-grid" id="grid"></div>
   </div>
@@ -165,5 +169,6 @@
 
 <script src="assets/v26-glitchfusion-sonar.js" defer></script>
 <script src="assets/v27-red-mascot.js" defer></script>
+<script src="assets/v28-radar.js" defer></script>
 </body>
 </html>

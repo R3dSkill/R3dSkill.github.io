@@ -9,6 +9,15 @@
     ['Físico', 'Acesso físico, áreas restritas, dispositivos expostos e validações in loco.', '<rect x="5" y="14" width="22" height="16" rx="3"/><path d="M9 14V9a7 7 0 0 1 14 0v5m-7 9v3"/><circle cx="16" cy="21" r="2"/>'],
     ['Phishing', 'Simulações de engenharia social, credenciais, e-mails e páginas de captura.', '<rect x="2" y="6" width="28" height="20" rx="3"/><path d="m3 8 13 10L29 8"/>'],
   ];
+  if (document.body.dataset.serviceCount === '9') fronts.push(
+    ['IA', 'Segurança de aplicações e agentes de IA: prompt injection, dados e abuso de fluxos.', '<rect x="7" y="7" width="18" height="18" rx="4"/><path d="M11 2v5m5-5v5m5-5v5M11 25v5m5-5v5m5-5v5M2 11h5m-5 5h5m-5 5h5m18-10h5m-5 5h5m-5 5h5M12 12l8 0-4 8-4-8Zm0 0 4 8"/>'],
+    ['Forense', 'Coleta e análise de evidências digitais para reconstruir eventos e orientar decisões.', '<path d="M6 3h13l7 7v7M19 3v7h7M6 3v26h12"/><circle cx="21" cy="22" r="5"/><path d="m25 26 4 4M10 14h7m-7 5h5"/>'],
+    ['Purple-Team', 'Ataque e defesa juntos para validar controles, telemetria, detecção e resposta.', '<path d="M16 3 27 7v8c0 7-4.6 11.7-11 14-6.4-2.3-11-7-11-14V7l11-4Z"/><path d="m9 11 5 5-5 5m14-10-5 5 5 5M14 16h4"/>'],
+  );
+  const grid = document.querySelector('#grid');
+  while (grid.children.length < fronts.length) {
+    grid.insertAdjacentHTML('beforeend', '<article class="tc" data-v27-added><span class="num"></span><h3></h3><p></p><span class="ln" aria-hidden="true"><i></i></span></article>');
+  }
   // Keep the existing card elements and their lighting/tilt event listeners.
   document.querySelectorAll('#grid .tc').forEach((card, index) => {
     const [title, description, icon] = fronts[index];
@@ -16,6 +25,28 @@
     card.querySelector('h3').textContent = title;
     card.querySelector('p').textContent = description;
   });
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    grid.querySelectorAll('[data-v27-added]').forEach(card => {
+      let frame = 0;
+      card.addEventListener('pointermove', event => {
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          const bounds = card.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width;
+          const y = (event.clientY - bounds.top) / bounds.height;
+          card.style.setProperty('--mx', `${x * 100}%`);
+          card.style.setProperty('--my', `${y * 100}%`);
+          card.style.transform = `rotateY(${(x - .5) * 8}deg) rotateX(${(.5 - y) * 8}deg)`;
+        });
+      }, {passive:true});
+      card.addEventListener('pointerleave', () => {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        card.style.transform = '';
+      });
+    });
+  }
   const serviceSelect = document.querySelector('#service');
   serviceSelect.replaceChildren(...[...fronts.map(([title]) => `Pentest — ${title}`), 'Quero orientação para definir'].map((label) => new Option(label, label)));
 
