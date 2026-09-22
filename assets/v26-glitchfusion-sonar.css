@@ -68,19 +68,21 @@
   .hero-title{position:relative;width:max-content;max-width:100%;font-size:clamp(40px,7.5vw,102px);line-height:.88;font-weight:700;letter-spacing:-.042em;margin:48px auto 0;text-transform:uppercase}
   .glitch-line{position:relative;display:block;white-space:nowrap;isolation:isolate}.glitch-line.r{color:var(--red)}
   .glitch-line::before,.glitch-line::after{content:attr(data-txt);position:absolute;z-index:2;inset:0;overflow:hidden;pointer-events:none;opacity:0}
-  .glyph{position:relative}.glyph.is-char-glitch,.glyph.is-word-glitch{z-index:3}
+  .glyph{position:relative}.glyph.is-char-glitch,.glyph.is-word-glitch,.glyph.is-bit-glitch{z-index:3}
   @media(prefers-reduced-motion:no-preference){
-    .glitch-line.is-line-glitch{animation:glitchBody .64s steps(1) both}
-    .glitch-line.is-line-glitch::before{color:var(--cyan);animation:glitchCyan .64s steps(1) both}
-    .glitch-line.is-line-glitch::after{color:var(--red);animation:glitchRed .64s steps(1) both}
-    .glyph.is-char-glitch{animation:glyphFlip .56s steps(1) both}
-    .glyph.is-word-glitch{animation:wordShift .62s steps(1) both}
+    .glitch-line.is-line-glitch{animation:glitchBody var(--gd,.64s) steps(1) both}
+    .glitch-line.is-line-glitch::before{color:var(--cyan);animation:glitchCyan var(--gd,.64s) steps(1) both}
+    .glitch-line.is-line-glitch::after{color:var(--red);animation:glitchRed var(--gd,.64s) steps(1) both}
+    .glyph.is-char-glitch{animation:glyphFlip var(--gd,.42s) steps(1) both}
+    .glyph.is-word-glitch{animation:wordShift var(--gd,.48s) steps(1) both}
+    .glyph.is-bit-glitch{animation:bitCorrupt var(--gd,.34s) steps(2,jump-none) both}
   }
   @keyframes glitchBody{0%,10%,28%,46%,68%,100%{transform:none;filter:none}11%{transform:translateX(-2px) skewX(-.6deg);filter:drop-shadow(3px 0 0 rgba(255,45,45,.45))}29%{transform:translateX(2px);filter:drop-shadow(-3px 0 0 rgba(55,232,255,.4))}47%{transform:translateX(-1px) skewX(.4deg)}69%{transform:translateX(1px)}}
   @keyframes glitchCyan{0%,9%,22%,37%,53%,72%,100%{opacity:0;transform:none;clip-path:inset(0)}10%{opacity:.9;transform:translate(-7px,1px);clip-path:inset(8% 0 68%)}23%{opacity:.78;transform:translate(5px,-1px);clip-path:inset(62% 0 13%)}38%{opacity:.85;transform:translate(-4px);clip-path:inset(36% 0 42%)}54%{opacity:.7;transform:translate(3px,1px);clip-path:inset(78% 0 4%)}}
   @keyframes glitchRed{0%,14%,31%,44%,61%,78%,100%{opacity:0;transform:none;clip-path:inset(0)}15%{opacity:.9;transform:translate(6px,-1px);clip-path:inset(25% 0 53%)}32%{opacity:.8;transform:translate(-5px,1px);clip-path:inset(4% 0 76%)}45%{opacity:.86;transform:translate(4px);clip-path:inset(55% 0 21%)}62%{opacity:.72;transform:translate(-3px,-1px);clip-path:inset(82% 0 2%)}}
   @keyframes glyphFlip{0%,12%,38%,61%,100%{left:0;top:0;color:inherit;text-shadow:none}13%{left:-.09em;top:.025em;color:var(--cyan);text-shadow:.08em 0 var(--red)}39%{left:.07em;top:-.02em;color:#fff;text-shadow:-.07em 0 var(--cyan)}62%{left:-.03em;color:var(--red);text-shadow:.05em 0 var(--cyan)}}
   @keyframes wordShift{0%,17%,36%,58%,100%{left:0;top:0;text-shadow:none}18%{left:-.055em;top:.018em;text-shadow:.06em 0 var(--cyan)}37%{left:.04em;top:-.012em;text-shadow:-.05em 0 var(--red)}59%{left:-.018em;text-shadow:.03em 0 var(--cyan)}}
+  @keyframes bitCorrupt{0%,100%{transform:none;color:inherit;text-shadow:none}20%{transform:translateY(-.035em);color:var(--cyan);text-shadow:.055em 0 var(--red)}55%{transform:translate(.025em,.02em);color:#fff;text-shadow:-.045em 0 var(--cyan)}80%{transform:translateX(-.02em);color:var(--red)}}
   .typed-wrap{font-family:var(--mono);font-size:clamp(12px,1.7vw,16px);color:var(--muted);margin-top:24px;min-height:1.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .typed-wrap .tp{color:var(--red)}
   .cur{display:inline-block;width:8px;height:14px;background:var(--red);vertical-align:-2px;margin-left:3px;animation:bk 1s steps(1) infinite}
@@ -167,7 +169,7 @@
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(255,45,45,.13)}
   select option{background:var(--bg-2);color:var(--ink)}
   textarea{resize:vertical;min-height:84px}
-  form .btn-red{justify-content:center;padding:15px}
+  form .btn-red{justify-content:center;padding:15px;margin-top:auto}
   .form-status{min-height:1.2em;color:var(--muted);font:500 11px var(--mono);text-align:center}.form-status a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
 
   footer{border-top:1px solid var(--line);padding:40px 0}

@@ -274,12 +274,43 @@
   function setupGlitch() {
     const title = select('.hero-title');
     const lines = selectAll('.glitch-line', title);
-    const symbols = ['0', '1', '/', '\\', '[', ']', '#', '@', '%', '?'];
-    let pulseTimer = 0;
-    let resetTimer = 0;
-    let mutationTimers = [];
+    const symbols = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'A', 'B', 'C', 'D', 'E', 'F', '/', '\\', '[', ']', '{', '}',
+      '<', '>', '#', '@', '%', '?', '|', '+', '-', '_', '^', '~',
+      '░', '▒', '▓', '█', '▄', '▀', '▌', '▐', '■', '□', '╳', '┼', '┤', '├',
+    ];
+    const bitSymbols = ['0', '1', '0', '1', '░', '▒', '▓', '█'];
+    const timers = new Set();
+    let sequence = 0;
 
-    const pick = (items) => items[Math.floor(Math.random() * items.length)];
+    const random = () => {
+      if (window.crypto?.getRandomValues) {
+        const value = new Uint32Array(1);
+        window.crypto.getRandomValues(value);
+        return value[0] / 4294967296;
+      }
+      return Math.random();
+    };
+    const between = (minimum, maximum) => minimum + random() * (maximum - minimum);
+    const integer = (minimum, maximum) => Math.floor(between(minimum, maximum + 1));
+    const pick = (items) => items[integer(0, items.length - 1)];
+    const later = (callback, delay) => {
+      const timer = window.setTimeout(() => {
+        timers.delete(timer);
+        callback();
+      }, delay);
+      timers.add(timer);
+      return timer;
+    };
+    const shuffled = (items) => {
+      const result = [...items];
+      for (let index = result.length - 1; index > 0; index -= 1) {
+        const target = integer(0, index);
+        [result[index], result[target]] = [result[target], result[index]];
+      }
+      return result;
+    };
 
     const restoreLine = (line) => {
       if (!line.dataset.original) return;
@@ -307,74 +338,113 @@
       return selectAll('.glyph', line);
     };
 
-    const clear = () => {
-      window.clearTimeout(pulseTimer);
-      window.clearTimeout(resetTimer);
-      mutationTimers.forEach(window.clearTimeout);
-      mutationTimers = [];
+    const clearVisual = () => {
       title.removeAttribute('data-glitch-mode');
       lines.forEach((line) => {
         line.classList.remove('is-line-glitch');
+        line.style.removeProperty('--gd');
         restoreLine(line);
       });
+      title.style.removeProperty('width');
     };
 
-    const schedule = () => {
-      if (reduceMotion.matches || document.hidden) return;
-      pulseTimer = window.setTimeout(run, 3200 + Math.random() * 2800);
+    const stop = () => {
+      sequence += 1;
+      timers.forEach((timer) => window.clearTimeout(timer));
+      timers.clear();
+      clearVisual();
     };
 
-    const run = () => {
-      clear();
-      const mode = pick(['character', 'character', 'word', 'line']);
+    const mutate = (glyph, characterSet, minimum = 45, maximum = 190) => {
+      const original = glyph.dataset.character;
+      const mutations = integer(1, 3);
+      for (let index = 0; index < mutations; index += 1) {
+        later(() => {
+          if (glyph.isConnected) glyph.textContent = pick(characterSet);
+        }, index * between(22, 68));
+      }
+      later(() => {
+        if (glyph.isConnected) glyph.textContent = original;
+      }, between(minimum, maximum));
+    };
+
+    const burst = () => {
+      clearVisual();
+      title.style.width = `${title.getBoundingClientRect().width}px`;
+      const mode = pick([
+        'character', 'character', 'character',
+        'word', 'word', 'line', 'bit-run', 'bit-run',
+      ]);
       const line = pick(lines);
       title.dataset.glitchMode = mode;
+      line.style.setProperty('--gd', `${integer(130, 520)}ms`);
 
       if (mode === 'line') {
         line.classList.add('is-line-glitch');
-      } else {
-        const glyphs = buildGlyphs(line);
-        if (mode === 'word') {
-          const wordIds = [...new Set(glyphs.map((glyph) => glyph.dataset.word).filter(Boolean))];
-          const selectedWord = pick(wordIds);
-          const wordGlyphs = glyphs.filter((glyph) => glyph.dataset.word === selectedWord);
-          wordGlyphs.forEach((glyph) => glyph.classList.add('is-word-glitch'));
-          const mutated = pick(wordGlyphs);
-          if (mutated) {
-            mutated.textContent = pick(symbols);
-            mutationTimers.push(window.setTimeout(() => {
-              mutated.textContent = mutated.dataset.character;
-            }, 120));
-          }
-        } else {
-          const candidates = glyphs.filter((glyph) => glyph.dataset.word);
-          const amount = Math.min(candidates.length, 2 + Math.floor(Math.random() * 3));
-          candidates.sort(() => Math.random() - .5).slice(0, amount).forEach((glyph, index) => {
-            glyph.classList.add('is-char-glitch');
-            mutationTimers.push(window.setTimeout(() => {
-              glyph.textContent = pick(symbols);
-            }, index * 34));
-            mutationTimers.push(window.setTimeout(() => {
-              glyph.textContent = glyph.dataset.character;
-            }, 120 + index * 42));
-          });
-        }
+        return;
       }
 
-      resetTimer = window.setTimeout(() => {
-        clear();
-        schedule();
-      }, 760);
+      const glyphs = buildGlyphs(line);
+      const candidates = glyphs.filter((glyph) => glyph.dataset.word);
+
+      if (mode === 'word') {
+        const wordIds = [...new Set(candidates.map((glyph) => glyph.dataset.word))];
+        const selectedWord = pick(wordIds);
+        const wordGlyphs = candidates.filter((glyph) => glyph.dataset.word === selectedWord);
+        wordGlyphs.forEach((glyph) => glyph.classList.add('is-word-glitch'));
+        shuffled(wordGlyphs).slice(0, integer(1, Math.min(3, wordGlyphs.length))).forEach((glyph) => {
+          mutate(glyph, symbols, 80, 260);
+        });
+        return;
+      }
+
+      if (mode === 'bit-run') {
+        const start = integer(0, Math.max(0, candidates.length - 2));
+        const amount = integer(2, Math.min(8, candidates.length - start));
+        candidates.slice(start, start + amount).forEach((glyph, index) => {
+          glyph.classList.add('is-bit-glitch');
+          later(() => mutate(glyph, bitSymbols, 70, 240), index * integer(8, 35));
+        });
+        return;
+      }
+
+      shuffled(candidates).slice(0, integer(1, Math.min(6, candidates.length))).forEach((glyph, index) => {
+        glyph.classList.add('is-char-glitch');
+        later(() => mutate(glyph, symbols, 55, 230), index * integer(5, 42));
+      });
+    };
+
+    const schedule = (initial = false) => {
+      if (reduceMotion.matches || document.hidden) return;
+      const currentSequence = sequence;
+      later(() => {
+        if (currentSequence !== sequence || reduceMotion.matches || document.hidden) return;
+
+        const bursts = integer(1, 4);
+        let offset = 0;
+        for (let index = 0; index < bursts; index += 1) {
+          offset += index === 0 ? 0 : integer(55, 310);
+          later(() => {
+            if (currentSequence === sequence) burst();
+          }, offset);
+        }
+
+        later(() => {
+          if (currentSequence !== sequence) return;
+          clearVisual();
+          schedule();
+        }, offset + integer(220, 820));
+      }, initial ? integer(450, 2400) : integer(1800, 7200));
     };
 
     const restart = () => {
-      clear();
-      schedule();
+      stop();
+      schedule(true);
     };
 
     document.addEventListener('visibilitychange', restart);
     reduceMotion.addEventListener('change', restart);
-    if (!reduceMotion.matches) pulseTimer = window.setTimeout(run, 1200);
+    schedule(true);
   }
 
   function setupContactForm() {
