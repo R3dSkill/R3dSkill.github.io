@@ -25,14 +25,25 @@
 
   function setupTheme() {
     const button = select('#tgl');
+    const themeColor = select('meta[name="theme-color"]');
     const storageKey = 'redskill-v26-theme';
+    const applyTheme = (theme) => {
+      root.dataset.theme = theme;
+      const isLight = theme === 'light';
+      button.setAttribute('aria-pressed', String(isLight));
+      button.setAttribute('aria-label', isLight ? 'Ativar tema escuro' : 'Ativar tema claro');
+      themeColor.setAttribute('content', isLight ? '#faf9f8' : '#07070a');
+    };
+
+    let initialTheme = root.dataset.theme || 'dark';
     try {
       const savedTheme = localStorage.getItem(storageKey);
-      if (savedTheme) root.dataset.theme = savedTheme;
+      if (savedTheme) initialTheme = savedTheme;
     } catch (_) {}
+    applyTheme(initialTheme);
 
     button.addEventListener('click', () => {
-      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
       try { localStorage.setItem(storageKey, root.dataset.theme); } catch (_) {}
     });
   }
@@ -260,6 +271,112 @@
     }));
   }
 
+  function setupGlitch() {
+    const title = select('.hero-title');
+    const lines = selectAll('.glitch-line', title);
+    const symbols = ['0', '1', '/', '\\', '[', ']', '#', '@', '%', '?'];
+    let pulseTimer = 0;
+    let resetTimer = 0;
+    let mutationTimers = [];
+
+    const pick = (items) => items[Math.floor(Math.random() * items.length)];
+
+    const restoreLine = (line) => {
+      if (!line.dataset.original) return;
+      line.textContent = line.dataset.original;
+      delete line.dataset.original;
+      line.removeAttribute('aria-label');
+    };
+
+    const buildGlyphs = (line) => {
+      const original = line.textContent;
+      line.dataset.original = original;
+      line.setAttribute('aria-label', original);
+      line.replaceChildren();
+      let wordIndex = 0;
+      [...original].forEach((character) => {
+        const glyph = document.createElement('span');
+        glyph.className = 'glyph';
+        glyph.setAttribute('aria-hidden', 'true');
+        glyph.dataset.character = character;
+        if (character === ' ') wordIndex += 1;
+        else glyph.dataset.word = String(wordIndex);
+        glyph.textContent = character;
+        line.append(glyph);
+      });
+      return selectAll('.glyph', line);
+    };
+
+    const clear = () => {
+      window.clearTimeout(pulseTimer);
+      window.clearTimeout(resetTimer);
+      mutationTimers.forEach(window.clearTimeout);
+      mutationTimers = [];
+      title.removeAttribute('data-glitch-mode');
+      lines.forEach((line) => {
+        line.classList.remove('is-line-glitch');
+        restoreLine(line);
+      });
+    };
+
+    const schedule = () => {
+      if (reduceMotion.matches || document.hidden) return;
+      pulseTimer = window.setTimeout(run, 3200 + Math.random() * 2800);
+    };
+
+    const run = () => {
+      clear();
+      const mode = pick(['character', 'character', 'word', 'line']);
+      const line = pick(lines);
+      title.dataset.glitchMode = mode;
+
+      if (mode === 'line') {
+        line.classList.add('is-line-glitch');
+      } else {
+        const glyphs = buildGlyphs(line);
+        if (mode === 'word') {
+          const wordIds = [...new Set(glyphs.map((glyph) => glyph.dataset.word).filter(Boolean))];
+          const selectedWord = pick(wordIds);
+          const wordGlyphs = glyphs.filter((glyph) => glyph.dataset.word === selectedWord);
+          wordGlyphs.forEach((glyph) => glyph.classList.add('is-word-glitch'));
+          const mutated = pick(wordGlyphs);
+          if (mutated) {
+            mutated.textContent = pick(symbols);
+            mutationTimers.push(window.setTimeout(() => {
+              mutated.textContent = mutated.dataset.character;
+            }, 120));
+          }
+        } else {
+          const candidates = glyphs.filter((glyph) => glyph.dataset.word);
+          const amount = Math.min(candidates.length, 2 + Math.floor(Math.random() * 3));
+          candidates.sort(() => Math.random() - .5).slice(0, amount).forEach((glyph, index) => {
+            glyph.classList.add('is-char-glitch');
+            mutationTimers.push(window.setTimeout(() => {
+              glyph.textContent = pick(symbols);
+            }, index * 34));
+            mutationTimers.push(window.setTimeout(() => {
+              glyph.textContent = glyph.dataset.character;
+            }, 120 + index * 42));
+          });
+        }
+      }
+
+      resetTimer = window.setTimeout(() => {
+        clear();
+        schedule();
+      }, 760);
+    };
+
+    const restart = () => {
+      clear();
+      schedule();
+    };
+
+    document.addEventListener('visibilitychange', restart);
+    reduceMotion.addEventListener('change', restart);
+    if (!reduceMotion.matches) pulseTimer = window.setTimeout(run, 1200);
+  }
+
   function setupContactForm() {
     const form = select('#contact-form');
     const status = select('#form-status');
@@ -274,7 +391,14 @@
         data.get('message'),
       ].join('\n');
       const href = `mailto:contato@redskill.com.br?subject=${encodeURIComponent(`Novo projeto · ${data.get('service')}`)}&body=${encodeURIComponent(body)}`;
-      status.textContent = 'Continue no seu aplicativo de e-mail.';
+      const retry = document.createElement('a');
+      retry.href = href;
+      retry.textContent = 'abra a mensagem aqui';
+      status.replaceChildren(
+        document.createTextNode('Continue no seu aplicativo de e-mail. Se ele não abriu, '),
+        retry,
+        document.createTextNode('.'),
+      );
       window.location.href = href;
     });
   }
@@ -287,5 +411,6 @@
   setupAimCursor();
   setupScrollEffects();
   setupReveals();
+  setupGlitch();
   setupContactForm();
 })();

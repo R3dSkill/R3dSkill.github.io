@@ -52,12 +52,9 @@
   .aim-cursor svg{display:block;width:100%;height:100%;overflow:visible}.aim-cursor .aim-ring,.aim-cursor .aim-brackets{transform-origin:24px 24px;transition:transform .3s var(--ease)}
   .aim-cursor.is-link .aim-ring{transform:rotate(45deg) scale(.78)}.aim-cursor.is-link .aim-brackets{transform:rotate(-12deg) scale(1.12)}.aim-cursor.is-down .aim-ring{transform:scale(.52)}.aim-cursor.is-visible{opacity:1}
   @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html.aim-enabled,html.aim-enabled body,html.aim-enabled a,html.aim-enabled button{cursor:none}html.aim-enabled input,html.aim-enabled textarea{cursor:text}html.aim-enabled select,html.aim-enabled label{cursor:auto}}
-  @media(prefers-reduced-motion:reduce){.aim-cursor{display:none}}
-
   /* HERO */
   .hero{padding:140px 0 40px;text-align:center;position:relative;overflow:hidden}
   .hero>.wrap{position:relative;z-index:1}
-  .hero h1{margin:0}
   .hero-grid{position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:76px 76px;-webkit-mask-image:radial-gradient(ellipse 66% 56% at 50% 32%,#000,transparent 76%);mask-image:radial-gradient(ellipse 66% 56% at 50% 32%,#000,transparent 76%)}
   .rings{position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);width:min(96vmin,780px);aspect-ratio:1;pointer-events:none;z-index:0;-webkit-mask-image:radial-gradient(circle,#000 34%,transparent 74%);mask-image:radial-gradient(circle,#000 34%,transparent 74%)}
   .rings i{position:absolute;inset:0;border:1px solid var(--ring);border-radius:50%;animation:rp 6s ease-out infinite}
@@ -68,16 +65,22 @@
   @media(max-width:600px){.hero{padding:118px 0 30px}.bento{margin-top:44px}}
   .sys{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
   .sys b{color:var(--green);font-weight:500}
-  .glitch{position:relative;display:inline-block;font-size:clamp(42px,9.4vw,128px);line-height:.9;font-weight:700;letter-spacing:-.042em;margin-top:22px;text-transform:uppercase;max-width:100%}
-  .glitch.v26-title{font-size:clamp(40px,7.5vw,102px);line-height:.88}
-  .glitch .r{display:inline-block;color:var(--red);white-space:nowrap}
-  .glitch::before,.glitch::after{content:attr(data-txt);position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0}
+  .hero-title{position:relative;width:max-content;max-width:100%;font-size:clamp(40px,7.5vw,102px);line-height:.88;font-weight:700;letter-spacing:-.042em;margin:48px auto 0;text-transform:uppercase}
+  .glitch-line{position:relative;display:block;white-space:nowrap;isolation:isolate}.glitch-line.r{color:var(--red)}
+  .glitch-line::before,.glitch-line::after{content:attr(data-txt);position:absolute;z-index:2;inset:0;overflow:hidden;pointer-events:none;opacity:0}
+  .glyph{position:relative}.glyph.is-char-glitch,.glyph.is-word-glitch{z-index:3}
   @media(prefers-reduced-motion:no-preference){
-    .glitch::before{color:var(--cyan);z-index:-1;animation:gl1 4s steps(1) infinite}
-    .glitch::after{color:var(--red);z-index:-2;animation:gl2 4s steps(1) infinite}
+    .glitch-line.is-line-glitch{animation:glitchBody .64s steps(1) both}
+    .glitch-line.is-line-glitch::before{color:var(--cyan);animation:glitchCyan .64s steps(1) both}
+    .glitch-line.is-line-glitch::after{color:var(--red);animation:glitchRed .64s steps(1) both}
+    .glyph.is-char-glitch{animation:glyphFlip .56s steps(1) both}
+    .glyph.is-word-glitch{animation:wordShift .62s steps(1) both}
   }
-  @keyframes gl1{0%,93%,100%{opacity:0;transform:none;clip-path:none}94%{opacity:.8;transform:translate(-5px,2px);clip-path:polygon(0 12%,100% 12%,100% 38%,0 38%)}96%{opacity:.8;transform:translate(4px,-2px);clip-path:polygon(0 60%,100% 60%,100% 84%,0 84%)}}
-  @keyframes gl2{0%,93%,100%{opacity:0;transform:none;clip-path:none}95%{opacity:.85;transform:translate(5px,1px);clip-path:polygon(0 40%,100% 40%,100% 62%,0 62%)}97%{opacity:.85;transform:translate(-4px,-1px);clip-path:polygon(0 5%,100% 5%,100% 26%,0 26%)}}
+  @keyframes glitchBody{0%,10%,28%,46%,68%,100%{transform:none;filter:none}11%{transform:translateX(-2px) skewX(-.6deg);filter:drop-shadow(3px 0 0 rgba(255,45,45,.45))}29%{transform:translateX(2px);filter:drop-shadow(-3px 0 0 rgba(55,232,255,.4))}47%{transform:translateX(-1px) skewX(.4deg)}69%{transform:translateX(1px)}}
+  @keyframes glitchCyan{0%,9%,22%,37%,53%,72%,100%{opacity:0;transform:none;clip-path:inset(0)}10%{opacity:.9;transform:translate(-7px,1px);clip-path:inset(8% 0 68%)}23%{opacity:.78;transform:translate(5px,-1px);clip-path:inset(62% 0 13%)}38%{opacity:.85;transform:translate(-4px);clip-path:inset(36% 0 42%)}54%{opacity:.7;transform:translate(3px,1px);clip-path:inset(78% 0 4%)}}
+  @keyframes glitchRed{0%,14%,31%,44%,61%,78%,100%{opacity:0;transform:none;clip-path:inset(0)}15%{opacity:.9;transform:translate(6px,-1px);clip-path:inset(25% 0 53%)}32%{opacity:.8;transform:translate(-5px,1px);clip-path:inset(4% 0 76%)}45%{opacity:.86;transform:translate(4px);clip-path:inset(55% 0 21%)}62%{opacity:.72;transform:translate(-3px,-1px);clip-path:inset(82% 0 2%)}}
+  @keyframes glyphFlip{0%,12%,38%,61%,100%{left:0;top:0;color:inherit;text-shadow:none}13%{left:-.09em;top:.025em;color:var(--cyan);text-shadow:.08em 0 var(--red)}39%{left:.07em;top:-.02em;color:#fff;text-shadow:-.07em 0 var(--cyan)}62%{left:-.03em;color:var(--red);text-shadow:.05em 0 var(--cyan)}}
+  @keyframes wordShift{0%,17%,36%,58%,100%{left:0;top:0;text-shadow:none}18%{left:-.055em;top:.018em;text-shadow:.06em 0 var(--cyan)}37%{left:.04em;top:-.012em;text-shadow:-.05em 0 var(--red)}59%{left:-.018em;text-shadow:.03em 0 var(--cyan)}}
   .typed-wrap{font-family:var(--mono);font-size:clamp(12px,1.7vw,16px);color:var(--muted);margin-top:24px;min-height:1.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .typed-wrap .tp{color:var(--red)}
   .cur{display:inline-block;width:8px;height:14px;background:var(--red);vertical-align:-2px;margin-left:3px;animation:bk 1s steps(1) infinite}
@@ -95,8 +98,6 @@
   .b .k{font-family:var(--mono);font-size:10.5px;color:var(--red);text-transform:uppercase;letter-spacing:.11em}
   .b h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-top:11px}
   .b p{font-size:13.5px;line-height:1.6;color:var(--muted);margin-top:8px}
-  .b .metric{font-family:var(--mono);font-size:clamp(32px,3.8vw,48px);font-weight:700;letter-spacing:-.03em;margin-top:9px;line-height:1}
-  .b .metric em{font-style:normal;color:var(--red)}
   .b .principle{font-size:clamp(25px,3vw,39px);font-weight:700;letter-spacing:-.035em;line-height:1;margin-top:18px;max-width:11ch}.b .principle em{font-style:normal;color:var(--red)}
   .mini-term{font-family:var(--mono);font-size:11.5px;line-height:1.8;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:auto;height:112px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start}
   .mini-term>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -167,7 +168,7 @@
   select option{background:var(--bg-2);color:var(--ink)}
   textarea{resize:vertical;min-height:84px}
   form .btn-red{justify-content:center;padding:15px}
-  .form-status{min-height:1.2em;color:var(--muted);font:500 11px var(--mono);text-align:center}
+  .form-status{min-height:1.2em;color:var(--muted);font:500 11px var(--mono);text-align:center}.form-status a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
 
   footer{border-top:1px solid var(--line);padding:40px 0}
   .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
@@ -177,3 +178,5 @@
   [data-theme="light"] .foot img.lt{display:block}
   .foot p,.foot a{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
   .foot a{transition:color .2s}.foot a:hover{color:var(--red)}
+  @media(max-width:600px){.hero-title{margin-top:30px}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.aim-cursor{display:none}.rings i,.radar .sweep,.radar .blip,.cur{animation:none}}
